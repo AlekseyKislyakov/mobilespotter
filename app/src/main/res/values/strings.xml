@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">mobile-spotter</string>
+    <string name="userslist_toolbar_title">Выбор пользователя</string>
+    <string name="userlist_search_user">Поиск пользователя</string>
+    <string name="userlist_search_hint">Иванов Вася</string>
+</resources>
