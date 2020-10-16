@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/deviceListFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_phone_black"
+        android:title="@string/device_list" />
+    <item
+        android:id="@+id/profileFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile_black"
+        android:title="@string/profile" />
+    <item
+        android:id="@+id/takeDeviceFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_change"
+        android:title="@string/take_device" />
+</menu>

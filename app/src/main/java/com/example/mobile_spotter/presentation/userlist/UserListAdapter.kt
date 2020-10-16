@@ -4,66 +4,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.brandongogetap.stickyheaders.exposed.StickyHeader
+import com.brandongogetap.stickyheaders.exposed.StickyHeaderHandler
 import com.example.mobile_spotter.R
-import com.example.mobile_spotter.data.entities.ANDROID
-import com.example.mobile_spotter.data.entities.IOS
-import com.example.mobile_spotter.data.entities.QA
-import com.example.mobile_spotter.data.entities.User
+import com.example.mobile_spotter.data.entities.*
+import kotlinx.android.synthetic.main.item_userlist_header.view.*
+import kotlinx.android.synthetic.main.item_userlist_person.view.*
+import java.util.*
 import javax.inject.Inject
 
-class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    class AdapterItem private constructor(
-        val user: User
-    ) {
-
-        companion object {
-            fun createTopCity(user: User) = AdapterItem(user)
-            fun createLetter(department: String) = AdapterItem(department)
-        }
-
-        enum class Type {
-            TOP,
-            NORMAL,
-            LETTER
-        }
-
-        var last = false
-    }
+class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    StickyHeaderHandler {
 
     companion object {
 
         private const val HEADER_VIEW_TYPE = 0
         private const val USER_VIEW_TYPE = 1
 
-        private val departmentPriority = listOf(QA, ANDROID, IOS)
+        private val departmentPriority = listOf(
+            QA,
+            ANDROID,
+            IOS,
+            HEAD,
+            BACKEND_JAVA,
+            BACKEND_PHP,
+            BACKEND_PYTHON,
+            FRONTEND_JS,
+            FRONTEND_TCS,
+            SERVICE
+        )
     }
 
-    //    private var filteredItems = listOf<AdapterItem>()
-//    private var sortedItems = listOf<AdapterItem>()
-    private val items = mutableListOf<User>()
-//        get() = if (filter.isEmpty()) sortedItems else filteredItems
+    private val allUsers = mutableListOf<User>()
+    private val items = mutableListOf<UserEntity>()
 
-//    var filter = ""
-//        set(value) {
-//            filteredItems = sortedItems
-//                .filter { it.type == AdapterItem.Type.NORMAL }
-//                .filter { it.city?.name?.contains(value, ignoreCase = true) ?: false }
-//            field = value
-//        }
-
-    // private val clicksRelay = PublishRelay.create<City>().toSerialized()
+    var onUserClickListener: (User) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
-            HEADER_VIEW_TYPE -> return TopViewHolder(
+            HEADER_VIEW_TYPE -> return DepartmentViewHolder(
                 inflater
-                    .inflate(R.layout.item_cities_top, parent, false)
+                    .inflate(R.layout.item_userlist_header, parent, false)
             )
-            USER_VIEW_TYPE -> return NormalViewHolder(
+            USER_VIEW_TYPE -> return UserViewHolder(
                 inflater
-                    .inflate(R.layout.item_cities_normal, parent, false)
+                    .inflate(R.layout.item_userlist_person, parent, false)
             )
         }
         throw IllegalStateException("Unknown view type: $viewType")
@@ -71,112 +57,90 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            TOP_VIEW_TYPE -> (holder as TopViewHolder).bind(
-                city = getCityByAdapterPosition(position),
-                isLast = isLastPosition(position)
+            HEADER_VIEW_TYPE -> (holder as DepartmentViewHolder).bind(
+                department = (getUserByAdapterPosition(position) as Department).department,
             )
-            NORMAL_VIEW_TYPE -> (holder as NormalViewHolder).bind(
-                city = getCityByAdapterPosition(position),
-                isLast = isLastPosition(position)
-            )
-            LETTER_VIEW_TYPE -> (holder as LetterViewHolder).bind(
-                getLetterByAdapterPosition(position)
+            USER_VIEW_TYPE -> (holder as UserViewHolder).bind(
+                user = (getUserByAdapterPosition(position) as User)
             )
         }
     }
 
-    private fun getCityByAdapterPosition(position: Int): City {
-        return items[position].city ?: throw IllegalStateException("Unknown city position")
-    }
-
-    private fun getLetterByAdapterPosition(position: Int): Char {
-        return items[position].letter ?: throw IllegalStateException("Unknown city position")
-    }
-
-    private fun isLastPosition(position: Int): Boolean {
-        return items[position].last
+    private fun getUserByAdapterPosition(position: Int): UserEntity {
+        return items[position]
     }
 
     override fun getItemCount(): Int {
-        return if (items.isEmpty()) 1 else items.size
+        return if (items.isEmpty()) 0 else items.size
+    }
+
+    override fun getAdapterData(): MutableList<*> {
+        return items
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (items.isEmpty()) {
-            EMPTY_VIEW_TYPE
+        return if (items[position] is Department) {
+            HEADER_VIEW_TYPE
         } else {
-            when (items[position].type) {
-                AdapterItem.Type.TOP -> TOP_VIEW_TYPE
-                AdapterItem.Type.NORMAL -> NORMAL_VIEW_TYPE
-                AdapterItem.Type.LETTER -> LETTER_VIEW_TYPE
+            USER_VIEW_TYPE
+        }
+    }
+
+    fun applyQuery(query: String) {
+        if (query.isNotEmpty()) {
+            handleData(allUsers.filter {
+                it.firstName.toLowerCase(Locale.ROOT).contains(query) ||
+                        it.lastName.toLowerCase(Locale.ROOT).contains(query)
+            })
+        } else {
+            handleData(allUsers)
+        }
+    }
+
+    fun applyData(list: List<User>) {
+        allUsers.addAll(list)
+        handleData(list)
+    }
+
+    private fun handleData(list: List<User>) {
+        items.clear()
+        departmentPriority.forEach { department ->
+            list.filter { departmentPriority.contains(it.department) }
+                .groupBy { it.department }
+                .forEach { entry ->
+                    if (department == entry.key && entry.value.isNotEmpty()) {
+                        items.add(Department(entry.value.first().department))
+                        items.addAll(entry.value.map { it })
+                    }
+                }
+        }
+
+        notifyDataSetChanged()
+
+    }
+
+    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val textViewName = itemView.textViewUserFirstName
+        private val textViewLastName = itemView.textViewUserLastName
+
+        fun bind(user: User) {
+            textViewName.text = user.firstName
+            textViewLastName.text = user.lastName
+
+            itemView.setOnClickListener {
+                onUserClickListener.invoke(user)
             }
         }
     }
 
-    fun setData(list: List<User>) {
+    inner class DepartmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), StickyHeader {
 
-        val result = mutableListOf<AdapterItem>()
+        private val textViewDepartment = itemView.textViewDepartment
 
-        list.filter { departmentPriority.contains(it.department) }
-            .groupBy { it.department }
-            .forEach { entry ->
-
-
-            }
-
-
-        val top = topCities.mapNotNull { topId -> list.find { it.id == topId } }
-        val sorted = list.sortedBy { it.name }
-        val groups = sorted.groupBy { it.name.first().toUpperCase() }
-        val alphabetic = groups.keys.sorted()
-
-        top.forEach {
-            result.add(AdapterItem.createTopCity(it))
-        }
-        result.last().last = true
-        alphabetic.forEach {
-            result.add(AdapterItem.createLetter(it))
-            groups[it]?.forEach { result.add(AdapterItem.createNormalCity(it)) }
-            result.last().last = true
-        }
-
-        this.sortedItems = result
-    }
-
-    fun clicks(): Observable<City> = clicksRelay
-
-    inner class TopViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val viewDivider = itemView.viewDivider
-        private val textViewName = itemView.textViewName
-
-        fun bind(city: City, isLast: Boolean) {
-            textViewName.text = city.name
-            viewDivider.visibility = if (!isLast) View.VISIBLE else View.GONE
-            itemView.setOnClickListener { clicksRelay.accept(city) }
+        fun bind(department: Int) {
+            textViewDepartment.text = itemView.resources.getString(department.recognize())
         }
     }
-
-    inner class NormalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val viewDivider = itemView.viewDivider
-        private val textViewName = itemView.textViewName
-
-        fun bind(city: City, isLast: Boolean) {
-            textViewName.text = city.name
-            viewDivider.visibility = if (!isLast) View.VISIBLE else View.GONE
-            itemView.setOnClickListener { clicksRelay.accept(city) }
-        }
-    }
-
-    inner class LetterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val textViewLetter = itemView.textViewLetter
-
-        fun bind(letter: Char) {
-            textViewLetter.text = letter.toString()
-        }
-    }
-
-    inner class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 }
+

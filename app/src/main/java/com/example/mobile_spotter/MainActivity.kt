@@ -26,6 +26,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navigator.navigateTo(Screens.USERS)
+        navigator.navigateToRoot(Screens.USERS)
     }
 }

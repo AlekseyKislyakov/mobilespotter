@@ -10,4 +10,4 @@ data class User(
     @SerializedName("LastName") val lastName: String,
     @SerializedName("Login") val login: String,
     @SerializedName("TG") val telegram: String
-)
+): UserEntity

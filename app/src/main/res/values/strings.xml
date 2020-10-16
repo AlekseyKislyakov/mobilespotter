@@ -3,4 +3,21 @@
     <string name="userslist_toolbar_title">Выбор пользователя</string>
     <string name="userlist_search_user">Поиск пользователя</string>
     <string name="userlist_search_hint">Иванов Вася</string>
+    <string name="profile">Профиль</string>
+    <string name="take_device">Взять устройство</string>
+    <string name="device_list">Список устройств</string>
+    <string name="retry_request">Повторить</string>
+
+<!--    departments-->
+    <string name="android">Android</string>
+    <string name="ios">iOS</string>
+    <string name="qa">Тестирование</string>
+    <string name="backend_java">Backend Java</string>
+    <string name="backend_php">Backend Php</string>
+    <string name="backend_python">Backend Python</string>
+    <string name="frontend_js">Frontend JS</string>
+    <string name="frontend_tcs">Frontend TCS</string>
+    <string name="service">Служебный</string>
+    <string name="head">Разработка</string>
+    <string name="devicelist_toolbar_title">devicelist_toolbar_title</string>
 </resources>

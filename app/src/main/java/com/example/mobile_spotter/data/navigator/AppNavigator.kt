@@ -1,5 +1,7 @@
 package com.example.mobile_spotter.data.navigator
 
+import android.os.Bundle
+
 /**
  * Available screens.
  */
@@ -13,5 +15,6 @@ enum class Screens {
  */
 interface AppNavigator {
     // Navigate to a given screen.
-    fun navigateTo(screen: Screens)
+    fun navigateTo(screen: Screens, bundle: Bundle? = null)
+    fun navigateToRoot(screen: Screens, bundle: Bundle? = null)
 }

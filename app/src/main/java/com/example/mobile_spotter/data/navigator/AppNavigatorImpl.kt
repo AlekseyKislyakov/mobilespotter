@@ -1,5 +1,7 @@
 package com.example.mobile_spotter.data.navigator
 
+import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.presentation.userlist.UserListFragment
@@ -7,15 +9,31 @@ import javax.inject.Inject
 
 class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivity) : AppNavigator {
 
-    override fun navigateTo(screen: Screens) {
-        val fragment = when (screen) {
-            Screens.USERS -> UserListFragment()
-            Screens.DEVICES -> UserListFragment()
-        }
-
+    override fun navigateTo(screen: Screens, bundle: Bundle?) {
         activity.supportFragmentManager.beginTransaction()
-            .replace(R.id.container, fragment)
-            // .addToBackStack(fragment::class.java.canonicalName)
+            .replace(R.id.container, detectScreen(screen, bundle))
+            .addToBackStack(detectScreen(screen, bundle)::class.java.canonicalName)
             .commit()
+    }
+
+    override fun navigateToRoot(screen: Screens, bundle: Bundle?) {
+        activity.supportFragmentManager.beginTransaction()
+            .replace(R.id.container, detectScreen(screen, bundle))
+            .commit()
+    }
+
+    private fun detectScreen(screen: Screens, bundle: Bundle?) : Fragment {
+        return when (screen) {
+            Screens.USERS -> UserListFragment().apply {
+                bundle?.let {
+                    arguments = it
+                }
+            }
+            Screens.DEVICES -> UserListFragment().apply {
+                bundle?.let {
+                    arguments = it
+                }
+            }
+        }
     }
 }

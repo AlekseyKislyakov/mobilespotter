@@ -3,8 +3,11 @@ package com.example.mobile_spotter.presentation.base
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import com.example.mobile_spotter.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
@@ -36,7 +39,7 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
         super.onActivityCreated(savedInstanceState)
         // Timber.d("onActivityCreated $this")
         // dispatchEventToPlugins(LifecycleEvent.OnActivityCreated(savedInstanceState))
-        //setupBottomNavigationVisibility()
+        setupBottomNavigationVisibility()
         onSetupLayout(savedInstanceState)
         onBindViewModel()
     }
@@ -90,10 +93,10 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
      */
     abstract fun onBindViewModel()
 
-//    private fun setupBottomNavigationVisibility() {
-//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-//        bottomNavigationView?.isVisible = showBottomNavigationView
-//    }
+    private fun setupBottomNavigationVisibility() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView?.isVisible = showBottomNavigationView
+    }
 
     // region Plugins
 //    @CallSuper
