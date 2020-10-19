@@ -19,5 +19,6 @@
     <string name="frontend_tcs">Frontend TCS</string>
     <string name="service">Служебный</string>
     <string name="head">Разработка</string>
-    <string name="devicelist_toolbar_title">devicelist_toolbar_title</string>
+    <string name="devicelist_toolbar_title">Выбор устройства</string>
+    <string name="search_parameters">Параметры поиска</string>
 </resources>

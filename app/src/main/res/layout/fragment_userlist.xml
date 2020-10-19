@@ -41,27 +41,27 @@
             tools:itemCount="5"
             tools:listitem="@layout/item_userlist_person"
             tools:visibility="visible" />
+    </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/viewLoading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <FrameLayout
+        android:id="@+id/viewLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonRetry"
-            style="@style/Button"
+        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/retry_request"
-            android:textAllCaps="false" />
+            android:layout_gravity="center" />
+
     </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRetry"
+        style="@style/Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/retry_request"
+        android:textAllCaps="false" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
