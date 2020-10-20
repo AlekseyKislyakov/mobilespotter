@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorAccent">@color/soft_green</color>
 
     <color name="white">#FFFFFF</color>
     <color name="grey">#888888</color>
@@ -10,6 +10,7 @@
     <color name="very_light_gray">#e8e8e8</color>
 
     <color name="black">#000000</color>
+    <color name="black_50">#80000000</color>
 
     <color name="soft_green">#32a852</color>
     <color name="soft_red">#bd3333</color>

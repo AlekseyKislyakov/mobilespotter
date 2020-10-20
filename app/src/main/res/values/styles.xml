@@ -17,6 +17,10 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="DialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:background">@color/white</item>
+    </style>
+
     <!-- Button -->
     <style name="Button" parent="@style/Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:minHeight">50dp</item>

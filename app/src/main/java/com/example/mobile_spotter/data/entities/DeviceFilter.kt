@@ -6,9 +6,10 @@ val OS_IOS = "ios"
 
 data class DeviceFilter(
     var os: String = "all",
-    val versionList: MutableList<String> = mutableListOf(),
-    var resolutionHeight: Int = -1,
-    var resolutionWidth: Int = -1,
+    val versionSet: MutableSet<String> = mutableSetOf(),
+    val selectedVersionSet: MutableSet<String> = mutableSetOf(),
+    val resolutionSet: MutableSet<String> = mutableSetOf(),
+    val selectedResolutionSet: MutableSet<String> = mutableSetOf(),
     var onlyAvailable: Boolean = false,
     val nonPrivate: Boolean = false
 )

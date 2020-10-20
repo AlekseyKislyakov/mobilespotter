@@ -8,6 +8,7 @@ import com.brandongogetap.stickyheaders.exposed.StickyHeader
 import com.brandongogetap.stickyheaders.exposed.StickyHeaderHandler
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
+import com.example.mobile_spotter.ext.containsNoCase
 import kotlinx.android.synthetic.main.item_userlist_header.view.*
 import kotlinx.android.synthetic.main.item_userlist_person.view.*
 import java.util.*
@@ -89,8 +90,8 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
     fun applyQuery(query: String) {
         if (query.isNotEmpty()) {
             handleData(allUsers.filter {
-                it.firstName.toLowerCase(Locale.ROOT).contains(query) ||
-                        it.lastName.toLowerCase(Locale.ROOT).contains(query)
+                it.firstName.containsNoCase(query) ||
+                        it.lastName.toLowerCase(Locale.ROOT).containsNoCase(query)
             })
         } else {
             handleData(allUsers)
