@@ -7,10 +7,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import com.example.mobile_spotter.R
+import com.example.mobile_spotter.ext.KeyboardShowListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
-abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
+abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout), KeyboardShowListener {
 
     open val showBottomNavigationView: Boolean
         get() = (parentFragment as? BaseFragment)?.showBottomNavigationView ?: false
@@ -39,6 +40,7 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
         super.onActivityCreated(savedInstanceState)
         // Timber.d("onActivityCreated $this")
         // dispatchEventToPlugins(LifecycleEvent.OnActivityCreated(savedInstanceState))
+        this.setKeyboardListener()
         setupBottomNavigationVisibility()
         onSetupLayout(savedInstanceState)
         onBindViewModel()
@@ -96,6 +98,24 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout) {
     private fun setupBottomNavigationVisibility() {
         val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView?.isVisible = showBottomNavigationView
+    }
+
+    fun hideBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView?.isVisible = false
+    }
+
+    fun showBottomNavigation() {
+        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView?.isVisible = true
+    }
+
+    override fun onKeyboardHeightChanged(value: Int) {
+        if(value != -1) {
+            hideBottomNavigation()
+        } else {
+            showBottomNavigation()
+        }
     }
 
     // region Plugins

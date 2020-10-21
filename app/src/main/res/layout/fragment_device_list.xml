@@ -192,9 +192,10 @@
             android:clipToPadding="false"
             android:orientation="vertical"
             android:overScrollMode="never"
+            android:nestedScrollingEnabled="true"
             android:visibility="invisible"
             tools:itemCount="5"
-            tools:listitem="@layout/item_devicelist"
+            tools:listitem="@layout/item_device_list"
             tools:visibility="visible" />
 
         <FrameLayout

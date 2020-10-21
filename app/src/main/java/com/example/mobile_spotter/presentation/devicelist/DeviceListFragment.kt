@@ -18,13 +18,14 @@ import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_devicelist.*
+import kotlinx.android.synthetic.main.fragment_device_list.*
 import kotlinx.android.synthetic.main.view_string_picker.view.*
+import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DeviceListFragment : BaseFragment(R.layout.fragment_devicelist) {
+class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     private val viewModel by viewModels<DeviceListViewModel>()
     private lateinit var searchView: SearchView
@@ -84,9 +85,9 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_devicelist) {
         makeDevicesRequest()
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    viewModel.setQuery(it)
-                }
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                viewModel.setQuery(it)
+            }
 
         observe(viewModel.getUsersOperation) {
             handleGetDevicesState(it.state)
@@ -112,6 +113,17 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_devicelist) {
 
         observe(viewModel.refreshFilters) {
             refreshFilters = true
+        }
+    }
+
+    override fun onKeyboardHeightChanged(value: Int) {
+        if (value != -1) {
+            hideBottomNavigation()
+        } else {
+            GlobalScope.launch(context = Dispatchers.Main) {
+                delay(50)
+                showBottomNavigation()
+            }
         }
     }
 
@@ -184,15 +196,15 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_devicelist) {
         radioButtonIOS.isChecked = filter.os == OS_IOS
 
         resolutionListAdapter.replaceItems(
-                filter.resolutionSet.toList(),
-                filter.selectedResolutionSet.toList(),
-                filter.os
+            filter.resolutionSet.toList(),
+            filter.selectedResolutionSet.toList(),
+            filter.os
         )
 
         versionListAdapter.replaceItems(
-                filter.versionSet.toList(),
-                filter.selectedVersionSet.toList(),
-                filter.os
+            filter.versionSet.toList(),
+            filter.selectedVersionSet.toList(),
+            filter.os
         )
 
         deviceListAdapter.applyFilter(filter, viewModel.queryLiveData.value ?: "")
@@ -212,11 +224,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_devicelist) {
         activity?.let { context ->
             if (chooseResolutionDialog == null) {
                 val chooseConverterView = LayoutInflater.from(context)
-                        .inflate(R.layout.view_string_picker, null)
+                    .inflate(R.layout.view_string_picker, null)
 
                 with(chooseConverterView) {
                     resolutionListAdapter.selectedSet =
-                            viewModel.filterParameters.value?.selectedResolutionSet ?: mutableSetOf()
+                        viewModel.filterParameters.value?.selectedResolutionSet ?: mutableSetOf()
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -247,11 +259,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_devicelist) {
         activity?.let { context ->
             if (chooseVersionDialog == null) {
                 val chooseVersionView = LayoutInflater.from(context)
-                        .inflate(R.layout.view_string_picker, null)
+                    .inflate(R.layout.view_string_picker, null)
 
                 with(chooseVersionView) {
                     versionListAdapter.selectedSet =
-                            viewModel.filterParameters.value?.selectedVersionSet ?: mutableSetOf()
+                        viewModel.filterParameters.value?.selectedVersionSet ?: mutableSetOf()
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false

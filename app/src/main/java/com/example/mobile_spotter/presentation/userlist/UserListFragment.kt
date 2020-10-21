@@ -5,6 +5,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.UserList
@@ -16,13 +17,13 @@ import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_userlist.*
+import kotlinx.android.synthetic.main.fragment_user_list.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class UserListFragment : BaseFragment(R.layout.fragment_userlist) {
+class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
     private val viewModel by viewModels<UserListViewModel>()
     private lateinit var searchView: SearchView
@@ -82,8 +83,13 @@ class UserListFragment : BaseFragment(R.layout.fragment_userlist) {
         }
 
         observe(viewModel.applyUser) {
-            navigator.navigateToRoot(Screens.DEVICES)
+            findNavController().navigate(UserListFragmentDirections.actionUserListFragmentToDeviceListFragment())
+            // navigator.navigateToRoot(Screens.DEVICES)
         }
+    }
+
+    override fun onKeyboardHeightChanged(value: Int) {
+
     }
 
     private fun handleGetUsersState(state: OpState) {

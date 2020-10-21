@@ -21,4 +21,14 @@
     <string name="head">Разработка</string>
     <string name="devicelist_toolbar_title">Выбор устройства</string>
     <string name="search_parameters">Параметры поиска</string>
+    <string name="devicedetails_toolbar_title">Подробная информация</string>
+    <string name="details_factory_name">Заводское название</string>
+    <string name="details_nickname_title">Народное название</string>
+    <string name="details_os_title">Операционная система и версия</string>
+    <string name="details_shell_title">Оболочка</string>
+    <string name="details_resolution_title">Разрешение экрана</string>
+    <string name="details_type_title">Тип устройства</string>
+    <string name="details_comment_title">Комментарий</string>
+    <string name="details_take">ВЗЯТЬ</string>
+    <string name="details_return">ВЕРНУТЬ</string>
 </resources>

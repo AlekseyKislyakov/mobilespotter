@@ -5,16 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.brandongogetap.stickyheaders.exposed.StickyHeader
-import com.brandongogetap.stickyheaders.exposed.StickyHeaderHandler
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.ext.containsNoCase
 import com.example.mobile_spotter.ext.detailedResolution
 import com.example.mobile_spotter.ext.detailedVersion
-import kotlinx.android.synthetic.main.item_devicelist.view.*
-import kotlinx.android.synthetic.main.item_userlist_header.view.*
-import kotlinx.android.synthetic.main.item_userlist_person.view.*
+import kotlinx.android.synthetic.main.item_device_list.view.*
 import java.util.*
 import javax.inject.Inject
 
@@ -57,7 +53,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
 //            )
             DEVICE_VIEW_TYPE -> return DeviceViewHolder(
                     inflater
-                            .inflate(R.layout.item_devicelist, parent, false)
+                            .inflate(R.layout.item_device_list, parent, false)
             )
         }
         throw IllegalStateException("Unknown view type: $viewType")

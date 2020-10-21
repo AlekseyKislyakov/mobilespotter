@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/userListFragment">
+
+    <fragment
+        android:id="@+id/userListFragment"
+        android:name="com.example.mobile_spotter.presentation.userlist.UserListFragment"
+        android:label="UserListFragment">
+        <action
+            android:id="@+id/action_userListFragment_to_deviceListFragment"
+            app:destination="@id/deviceListFragment"
+            app:popUpTo="@id/nav_graph" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/deviceListFragment"
+        android:name="com.example.mobile_spotter.presentation.devicelist.DeviceListFragment"
+        android:label="DeviceListFragment"
+        tools:layout="@layout/fragment_device_list">
+
+<!--        <action-->
+<!--            android:id="@+id/action_deviceList_to_deviceDetails"-->
+<!--            app:destination="@id/deviceDetailsFragment" />-->
+
+    </fragment>
+
+<!--    <fragment-->
+<!--        android:id="@+id/deviceDetailsFragment"-->
+<!--        android:name="com.example.mobile_spotter.presentation.devicedetails.DeviceDetailsFragment"-->
+<!--        android:label="DeviceDetailsFragment"-->
+<!--        tools:layout="@layout/fragment_device_details">-->
+
+<!--    </fragment>-->
+
+</navigation>

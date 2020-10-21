@@ -7,7 +7,8 @@ import android.os.Bundle
  */
 enum class Screens {
     USERS,
-    DEVICES
+    DEVICES,
+    DEVICE_DETAILS
 }
 
 /**

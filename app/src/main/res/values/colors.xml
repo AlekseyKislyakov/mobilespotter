@@ -13,6 +13,8 @@
     <color name="black_50">#80000000</color>
 
     <color name="soft_green">#32a852</color>
+    <color name="soft_green_white">#91faad</color>
     <color name="soft_red">#bd3333</color>
+    <color name="soft_red_white">#fc8b8b</color>
 
 </resources>
