@@ -18,6 +18,9 @@ import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_user_list.*
+import kotlinx.android.synthetic.main.fragment_user_list.buttonRetry
+import kotlinx.android.synthetic.main.fragment_user_list.toolbar
+import kotlinx.android.synthetic.main.fragment_user_list.viewLoading
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -30,9 +33,6 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
     @Inject
     lateinit var userListAdapter: UserListAdapter
-
-    @Inject
-    lateinit var navigator: AppNavigator
 
     override val showBottomNavigationView = false
 
@@ -71,6 +71,10 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
             viewModel.selectUser(it)
         }
 
+        userListAdapter.onEmptyListAction = {
+            emptyView.isVisible = it
+        }
+
         observe(viewModel.getUsersOperation) {
             handleGetUsersState(it.state)
             it.doOnSuccess { userInfo ->
@@ -83,7 +87,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         }
 
         observe(viewModel.applyUser) {
-            findNavController().navigate(UserListFragmentDirections.actionUserListFragmentToDeviceListFragment())
+            findNavController().navigate(UserListFragmentDirections.actionUserListFragmentToDeviceListFragment(it.id.toString()))
             // navigator.navigateToRoot(Screens.DEVICES)
         }
     }
@@ -113,7 +117,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     }
 
     private fun handleGetUsersInfo(list: UserList) {
-        if(list.isNotEmpty()) {
+        if (list.isNotEmpty()) {
             userListAdapter.applyData(list)
         }
     }

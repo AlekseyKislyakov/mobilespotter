@@ -27,7 +27,7 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            setupBottomNavigationBar()
+//            setupBottomNavigationBar()
         }
 
 //        bottomNavigationView.setupWithNavController(
@@ -48,28 +48,28 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
         // Now that BottomNavigationBar has restored its instance state
         // and its selectedItemId, we can proceed with setting up the
         // BottomNavigationBar with Navigation
-        setupBottomNavigationBar()
+//        setupBottomNavigationBar()
     }
 
-    private fun setupBottomNavigationBar() {
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
-        val navGraphIds = listOf(R.navigation.nav_graph, R.navigation.nav_graph_details)
-
-        // Setup the bottom navigation view with a list of navigation graphs
-        val controller = bottomNavigationView.setupWithNavController(
-            navGraphIds = navGraphIds,
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.nav_host_fragment,
-            intent = intent
-        )
-
-        // Whenever the selected controller changes, setup the action bar.
-        controller.observe(this, Observer { navController ->
-            //setupBottomNavigationBar()
-        })
-        currentNavController = controller
-    }
+//    private fun setupBottomNavigationBar() {
+//        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+//
+//        val navGraphIds = listOf(R.navigation.nav_graph, R.navigation.nav_graph_details)
+//
+//        // Setup the bottom navigation view with a list of navigation graphs
+//        val controller = bottomNavigationView.setupWithNavController(
+//            navGraphIds = navGraphIds,
+//            fragmentManager = supportFragmentManager,
+//            containerId = R.id.nav_host_fragment,
+//            intent = intent
+//        )
+//
+//        // Whenever the selected controller changes, setup the action bar.
+//        controller.observe(this, Observer { navController ->
+//            //setupBottomNavigationBar()
+//        })
+//        currentNavController = controller
+//    }
 
 //    override fun onSupportNavigateUp(): Boolean {
 //        return currentNavController?.value?.navigateUp() ?: false

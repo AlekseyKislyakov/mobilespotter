@@ -19,6 +19,7 @@
     <string name="frontend_tcs">Frontend TCS</string>
     <string name="service">Служебный</string>
     <string name="head">Разработка</string>
+
     <string name="devicelist_toolbar_title">Выбор устройства</string>
     <string name="search_parameters">Параметры поиска</string>
     <string name="devicedetails_toolbar_title">Подробная информация</string>
@@ -31,4 +32,13 @@
     <string name="details_comment_title">Комментарий</string>
     <string name="details_take">ВЗЯТЬ</string>
     <string name="details_return">ВЕРНУТЬ</string>
+    <string name="common_empty">Ничего не найдено </string>
+    <string name="common_all">Все</string>
+    <string name="common_android">Android</string>
+    <string name="common_ios">iOS</string>
+    <string name="device_list_os_version">Версия ОС</string>
+    <string name="common_resolution">Разрешение</string>
+    <string name="common_choose">Выбрать...</string>
+    <string name="device_list_only_free">Только свободные</string>
+    <string name="device_list_only_organization">Не показывать личные устройства</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
@@ -14,11 +15,18 @@ import com.example.mobile_spotter.data.entities.OS_ALL
 import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.presentation.base.BaseFragment
+import com.example.mobile_spotter.presentation.userlist.UserListFragmentDirections
 import com.example.mobile_spotter.utils.OpState
+import com.jakewharton.rxbinding4.appcompat.itemClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_device_list.*
+import kotlinx.android.synthetic.main.fragment_device_list.buttonRetry
+import kotlinx.android.synthetic.main.fragment_device_list.emptyView
+import kotlinx.android.synthetic.main.fragment_device_list.toolbar
+import kotlinx.android.synthetic.main.fragment_device_list.viewLoading
+import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.view_string_picker.view.*
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
@@ -58,7 +66,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
-        toolbar.inflateMenu(R.menu.menu_userlist)
+        toolbar.inflateMenu(R.menu.menu_devicelist)
 
         searchView = (toolbar.menu.findItem(R.id.actionSearch).actionView as SearchView)
         searchView.maxWidth = Int.MAX_VALUE
@@ -78,11 +86,27 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             rollFilters()
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            makeDevicesRequest()
+        }
+
+        toolbar.itemClicks().filter { it.itemId == R.id.actionProfile }.subscribe {
+
+        }
+
         setupFilterFields()
     }
 
     override fun onBindViewModel() {
         makeDevicesRequest()
+
+        deviceListAdapter.onClickListener = {
+            viewModel.setDevice(it)
+            findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(it.id.toString()))
+        }
+        deviceListAdapter.onEmptyListAction = {
+            emptyView.isVisible = it
+        }
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
@@ -138,11 +162,13 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 viewLoading.isVisible = false
                 buttonRetry.isGone = true
                 recyclerViewDevices.isVisible = true
+                swipeRefreshLayout.isRefreshing = false
             }
             OpState.FAILURE -> {
                 viewLoading.isVisible = false
                 buttonRetry.isVisible = true
                 recyclerViewDevices.isVisible = false
+                swipeRefreshLayout.isRefreshing = false
             }
         }
     }

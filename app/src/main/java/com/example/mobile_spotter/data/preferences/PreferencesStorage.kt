@@ -1,6 +1,7 @@
 package com.example.mobile_spotter.data.preferences
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
@@ -9,51 +10,34 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+
 @Singleton
 class PreferencesStorage @Inject constructor(
-    context: Context
+    application: Application
 ) {
 
     companion object {
         const val PREF_FILE_NAME = "pref_file"
 
-        private const val KEY_ACCESS_TOKEN = "accessToken"
-        private const val KEY_IS_SIGNED_IN = "isSignedIn"
-        private const val KEY_CITY_ID = "cityId"
-        private const val KEY_LAST_CATEGORIES_UPDATE = "lastCategoriesUpdate"
-        private const val KEY_IS_CITY_SELECTED = "isCitySelected"
-        private const val KEY_CRYPTO_MANAGER_IV = "cryptoManagerIv"
-        private const val KEY_IS_X_TESTER_HEADER_ENABLED = "isXTestersHeaderEnabled"
+        private const val KEY_DEVICE_ID = "KEY_DEVICE_ID"
+        private const val KEY_USER_ID = "KEY_USER_ID"
     }
 
     private val pref: SharedPreferences
 
     init {
-        pref = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+        pref = application.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
     }
 
-
-    var isSignedIn: Boolean
-        get() = pref.getBoolean(KEY_IS_SIGNED_IN, false)
-        set(value) {
-            pref.edit().putBoolean(KEY_IS_SIGNED_IN, value).apply()
+    var userId: Int?
+        get() = pref.getInt(KEY_USER_ID, -1)
+        set(userId) {
+            pref.edit().putInt(KEY_USER_ID, userId ?: -1).apply()
         }
 
-    var cityId: String?
-        get() = pref.getString(KEY_CITY_ID, null)
-        set(cityId) {
-            pref.edit().putString(KEY_CITY_ID, cityId).apply()
-        }
-
-    var lastCategoriesUpdate: Long
-        get() = pref.getLong(KEY_LAST_CATEGORIES_UPDATE, 0)
-        set(value) {
-            pref.edit().putLong(KEY_LAST_CATEGORIES_UPDATE, value).apply()
-
-
-            @SuppressLint("ApplySharedPref")
-            suspend fun clear() = withContext(Dispatchers.IO) {
-                pref.edit().clear().commit()
-            }
+    var deviceId: Int?
+        get() = pref.getInt(KEY_DEVICE_ID, -1)
+        set(deviceId) {
+            pref.edit().putInt(KEY_DEVICE_ID, deviceId ?: -1).apply()
         }
 }

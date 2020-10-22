@@ -40,6 +40,7 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
     private val items = mutableListOf<UserEntity>()
 
     var onUserClickListener: (User) -> Unit = {}
+    var onEmptyListAction: (Boolean) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -104,6 +105,7 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
     }
 
     private fun handleData(list: List<User>) {
+        onEmptyListAction.invoke(false)
         items.clear()
         departmentPriority.forEach { department ->
             list.filter { departmentPriority.contains(it.department) }
@@ -114,6 +116,10 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
                         items.addAll(entry.value.map { it })
                     }
                 }
+        }
+
+        if(items.isEmpty() && allUsers.isNotEmpty()) {
+            onEmptyListAction.invoke(true)
         }
 
         notifyDataSetChanged()

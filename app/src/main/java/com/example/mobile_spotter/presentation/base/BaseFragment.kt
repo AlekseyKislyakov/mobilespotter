@@ -96,18 +96,18 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout), KeyboardS
     abstract fun onBindViewModel()
 
     private fun setupBottomNavigationVisibility() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView?.isVisible = showBottomNavigationView
+//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+//        bottomNavigationView?.isVisible = showBottomNavigationView
     }
 
     fun hideBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView?.isVisible = false
+//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+//        bottomNavigationView?.isVisible = false
     }
 
     fun showBottomNavigation() {
-        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView?.isVisible = true
+//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+//        bottomNavigationView?.isVisible = true
     }
 
     override fun onKeyboardHeightChanged(value: Int) {

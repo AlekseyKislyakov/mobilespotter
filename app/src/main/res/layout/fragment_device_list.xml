@@ -23,220 +23,244 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.cardview.widget.CardView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/very_light_gray"
-            app:cardElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/very_light_gray"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <FrameLayout
+                    android:id="@+id/layoutFiltering"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize">
+
+                    <TextView
+                        android:id="@+id/textViewFilterName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|start"
+                        android:layout_marginStart="16dp"
+                        android:text="@string/search_parameters"
+                        android:textSize="17sp" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imageViewSearchArrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|end"
+                        android:layout_marginEnd="16dp"
+                        android:rotation="180"
+                        android:visibility="visible"
+                        app:srcCompat="@drawable/ic_keyboard_arrow" />
+                </FrameLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutFilters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="?attr/actionBarSize"
+                    android:visibility="gone">
+
+                    <RadioButton
+                        android:id="@+id/radioButtonAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/common_all"
+                        app:layout_constraintEnd_toStartOf="@id/radioButtonAndroid"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintHorizontal_chainStyle="spread_inside"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonAndroid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/common_android"
+                        app:layout_constraintEnd_toStartOf="@id/radioButtonIOS"
+                        app:layout_constraintStart_toEndOf="@id/radioButtonAll"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonIOS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="24dp"
+                        android:text="@string/common_ios"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/radioButtonAndroid"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textViewFilterVersionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:paddingStart="16dp"
+                        android:paddingTop="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="16dp"
+                        android:text="@string/device_list_os_version"
+                        android:textSize="17sp"
+                        app:layout_constraintTop_toBottomOf="@+id/radioButtonAll" />
+
+                    <TextView
+                        android:id="@+id/textViewFilterVersionValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingTop="16dp"
+                        android:paddingEnd="24dp"
+                        android:paddingBottom="16dp"
+                        android:text="@string/common_choose"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/radioButtonAll" />
+
+                    <TextView
+                        android:id="@+id/textViewFilterResolutionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/common_resolution"
+                        android:textSize="17sp"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewFilterVersionTitle" />
+
+                    <TextView
+                        android:id="@+id/textViewFilterResolutionValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="16dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="24dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/common_choose"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewFilterVersionTitle" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxOnlyFree"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/device_list_only_free"
+                        android:textSize="17sp"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewFilterResolutionTitle" />
+
+                    <CheckBox
+                        android:id="@+id/checkBoxNonPrivate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="12dp"
+                        android:text="@string/device_list_only_organization"
+                        android:textSize="17sp"
+                        app:layout_constraintTop_toBottomOf="@+id/checkBoxOnlyFree" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDevices"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="true"
+                android:orientation="vertical"
+                android:overScrollMode="never"
+                android:visibility="invisible"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_device_list"
+                tools:visibility="visible" />
 
             <FrameLayout
-                android:id="@+id/layoutFiltering"
+                android:id="@+id/viewLoading"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:layout_anchor="@+id/buttonRetry"
+                app:layout_anchorGravity="center"
+                tools:visibility="gone">
 
-                <TextView
-                    android:id="@+id/textViewFilterName"
+                <ProgressBar
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:layout_marginStart="16dp"
-                    android:text="@string/search_parameters"
-                    android:textSize="17sp" />
+                    android:layout_gravity="center" />
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageViewSearchArrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:layout_marginEnd="16dp"
-                    android:rotation="180"
-                    android:visibility="visible"
-                    app:srcCompat="@drawable/ic_keyboard_arrow" />
             </FrameLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutFilters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:visibility="gone">
-
-                <RadioButton
-                    android:id="@+id/radioButtonAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:paddingBottom="4dp"
-                    android:text="Все"
-                    app:layout_constraintEnd_toStartOf="@id/radioButtonAndroid"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonAndroid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Android"
-                    app:layout_constraintEnd_toStartOf="@id/radioButtonIOS"
-                    app:layout_constraintStart_toEndOf="@id/radioButtonAll"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonIOS"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:text="iOS"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/radioButtonAndroid"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textViewFilterVersionTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:paddingStart="16dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="Версия ОС"
-                    android:textSize="17sp"
-                    app:layout_constraintTop_toBottomOf="@+id/radioButtonAll" />
-
-                <TextView
-                    android:id="@+id/textViewFilterVersionValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="16dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="16dp"
-                    android:text="Все"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/radioButtonAll" />
-
-                <TextView
-                    android:id="@+id/textViewFilterResolutionTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:paddingStart="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="12dp"
-                    android:text="Разрешение"
-                    android:textSize="17sp"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewFilterVersionTitle" />
-
-                <TextView
-                    android:id="@+id/textViewFilterResolutionValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="24dp"
-                    android:paddingBottom="12dp"
-                    android:text="Все"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewFilterVersionTitle" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxOnlyFree"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:paddingStart="8dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="12dp"
-                    android:text="Только свободные"
-                    android:textSize="17sp"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewFilterResolutionTitle" />
-
-                <CheckBox
-                    android:id="@+id/checkBoxNonPrivate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:paddingStart="8dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="12dp"
-                    android:text="Не показывать личные устройства"
-                    android:textSize="17sp"
-                    app:layout_constraintTop_toBottomOf="@+id/checkBoxOnlyFree" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewDevices"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:overScrollMode="never"
-            android:nestedScrollingEnabled="true"
-            android:visibility="invisible"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_device_list"
-            tools:visibility="visible" />
-
-        <FrameLayout
-            android:id="@+id/viewLoading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:layout_anchor="@+id/buttonRetry"
-            app:layout_anchorGravity="center"
-            tools:visibility="visible">
-
-            <ProgressBar
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonRetry"
+                style="@style/Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:text="@string/retry_request"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
 
-        </FrameLayout>
+            <TextView
+                android:id="@+id/emptyView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/common_empty"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonRetry"
-            style="@style/Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/retry_request"
-            android:textAllCaps="false"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            <View
+                android:id="@+id/shadowView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black_50"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:visibility="visible" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <View
-            android:id="@+id/shadowView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black_50"
-            android:visibility="gone"
-            android:clickable="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:visibility="visible" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

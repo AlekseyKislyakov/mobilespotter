@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_spotter.data.entities.*
+import com.example.mobile_spotter.data.preferences.PreferencesStorage
 import com.example.mobile_spotter.domain.usecase.GetDevicesUseCase
 import com.example.mobile_spotter.domain.usecase.GetUsersUseCase
 import com.example.mobile_spotter.ext.detailedResolution
@@ -17,13 +18,16 @@ import kotlinx.coroutines.launch
 
 class DeviceListViewModel @ViewModelInject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
-    private val getUsersUseCase: GetUsersUseCase
+    private val getUsersUseCase: GetUsersUseCase,
+    private val preferencesStorage: PreferencesStorage
 ) : BaseViewModel() {
     val getDevicesOperation = MutableLiveData<LongOperation<DeviceList>>()
     val getUsersOperation = MutableLiveData<LongOperation<UserList>>()
 
     val queryLiveData = MutableLiveData<String>()
     val applyUser = MutableLiveData<User>()
+
+    val applyDevice = MutableLiveData<Device>()
 
     val refreshFilters = MutableLiveData<Unit>()
 
@@ -43,6 +47,11 @@ class DeviceListViewModel @ViewModelInject constructor(
 
     fun selectUser(user: User) {
         applyUser.value = user
+    }
+
+    fun setDevice(device: Device) {
+        preferencesStorage.deviceId = device.id
+        applyDevice.value = device
     }
 
     fun setOsType(type: String) {

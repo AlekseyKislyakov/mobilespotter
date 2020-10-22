@@ -21,18 +21,39 @@
         android:label="DeviceListFragment"
         tools:layout="@layout/fragment_device_list">
 
-<!--        <action-->
-<!--            android:id="@+id/action_deviceList_to_deviceDetails"-->
-<!--            app:destination="@id/deviceDetailsFragment" />-->
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_deviceListFragment_to_deviceDetailsFragment"
+            app:destination="@id/deviceDetailsFragment" />
 
     </fragment>
 
-<!--    <fragment-->
-<!--        android:id="@+id/deviceDetailsFragment"-->
-<!--        android:name="com.example.mobile_spotter.presentation.devicedetails.DeviceDetailsFragment"-->
-<!--        android:label="DeviceDetailsFragment"-->
-<!--        tools:layout="@layout/fragment_device_details">-->
+    <fragment
+        android:id="@+id/deviceDetailsFragment"
+        android:name="com.example.mobile_spotter.presentation.devicedetails.DeviceDetailsFragment"
+        android:label="DeviceDetailsFragment"
+        tools:layout="@layout/fragment_device_details">
+        <argument
+            android:name="deviceId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_deviceDetailsFragment_to_deviceListFragment"
+            app:destination="@id/deviceListFragment" />
 
-<!--    </fragment>-->
+        <action
+            android:id="@+id/action_deviceDetailsFragment_to_navigation"
+            app:destination="@id/deepLink" />
+        <deepLink
+            android:id="@+id/deepLink"
+            app:action="android.intent.action.VIEW"
+            app:uri="t.me/akislyakov" />
+    </fragment>
+
+    <activity
+        android:id="@+id/navigation_endpoint_id"
+        app:action="android.intent.action.VIEW"
+        app:data="t.me/akislyakov"/>
 
 </navigation>

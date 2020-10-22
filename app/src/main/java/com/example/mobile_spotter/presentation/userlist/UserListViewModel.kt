@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.data.entities.UserList
+import com.example.mobile_spotter.data.preferences.PreferencesStorage
 import com.example.mobile_spotter.domain.usecase.GetUsersUseCase
 import com.example.mobile_spotter.presentation.base.BaseViewModel
 import com.example.mobile_spotter.utils.LongOperation
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class UserListViewModel @ViewModelInject constructor(
-    private val getUsersUseCase: GetUsersUseCase
+    private val getUsersUseCase: GetUsersUseCase,
+    private val preferences: PreferencesStorage
 ) : BaseViewModel() {
 
     val getUsersOperation = MutableLiveData<LongOperation<UserList>>()
@@ -29,6 +31,7 @@ class UserListViewModel @ViewModelInject constructor(
     }
 
     fun selectUser(user: User) {
+        preferences.userId = user.id
         applyUser.value = user
     }
 

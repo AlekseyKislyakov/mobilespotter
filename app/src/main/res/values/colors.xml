@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimary">@color/soft_green</color>
+    <color name="colorPrimaryDark">@color/soft_green_darker</color>
     <color name="colorAccent">@color/soft_green</color>
 
     <color name="white">#FFFFFF</color>
@@ -13,6 +13,7 @@
     <color name="black_50">#80000000</color>
 
     <color name="soft_green">#32a852</color>
+    <color name="soft_green_darker">#2c9147</color>
     <color name="soft_green_white">#91faad</color>
     <color name="soft_red">#bd3333</color>
     <color name="soft_red_white">#fc8b8b</color>

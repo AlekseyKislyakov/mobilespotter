@@ -49,7 +49,7 @@ interface KeyboardShowListener {
         // this is used to have some extra space so view wont be stretched
         val safetyShift = 100
         // onGlobalLayoutListener is needed to check for layout change
-        /*activity?.nav_host_fragment?.viewTreeObserver?.addOnGlobalLayoutListener {
+        activity?.nav_host_fragment?.viewTreeObserver?.addOnGlobalLayoutListener {
             var r = Rect()
             // r will be populated with the coordinates of your view that area still visible.
             activity?.nav_host_fragment?.getWindowVisibleDisplayFrame(r)
@@ -65,6 +65,6 @@ interface KeyboardShowListener {
                     this@KeyboardShowListener.onKeyboardHeightChanged(-1)
                 }
             }
-        }*/
+        }
     }
 }
