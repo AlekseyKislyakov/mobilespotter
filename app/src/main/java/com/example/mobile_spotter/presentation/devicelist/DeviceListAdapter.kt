@@ -111,7 +111,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
             }
 
             if (data.owner == null) {
-                textViewStatus.text = "Свободен"
+                textViewStatus.text = itemView.context.getString(R.string.device_list_free)
                 textViewStatus.setTextColor(
                         ResourcesCompat.getColor(
                                 itemView.resources,
@@ -121,7 +121,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
                 )
             } else {
                 textViewStatus.text =
-                        "Занят. Арендатор - ${data.owner.lastName} ${data.owner.firstName}"
+                    itemView.context.getString(R.string.device_list_busy, data.owner.fullName())
                 textViewStatus.setTextColor(
                         ResourcesCompat.getColor(
                                 itemView.resources,

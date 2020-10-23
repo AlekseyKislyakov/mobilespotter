@@ -21,6 +21,8 @@ class PreferencesStorage @Inject constructor(
 
         private const val KEY_DEVICE_ID = "KEY_DEVICE_ID"
         private const val KEY_USER_ID = "KEY_USER_ID"
+        private const val KEY_PUBLIC_ACCOUNT = "KEY_PUBLIC_ACCOUNT"
+        private const val KEY_TOKEN = "KEY_TOKEN"
     }
 
     private val pref: SharedPreferences
@@ -39,5 +41,17 @@ class PreferencesStorage @Inject constructor(
         get() = pref.getInt(KEY_DEVICE_ID, -1)
         set(deviceId) {
             pref.edit().putInt(KEY_DEVICE_ID, deviceId ?: -1).apply()
+        }
+
+    var publicAccount: Boolean?
+        get() = pref.getBoolean(KEY_PUBLIC_ACCOUNT, false)
+        set(publicAccount) {
+            pref.edit().putBoolean(KEY_PUBLIC_ACCOUNT, publicAccount ?: false).apply()
+        }
+
+    var token: String?
+        get() = pref.getString(KEY_TOKEN, "keddva5rd")
+        set(token) {
+            pref.edit().putString(KEY_TOKEN, token).apply()
         }
 }

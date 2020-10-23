@@ -38,7 +38,18 @@
     <string name="common_ios">iOS</string>
     <string name="device_list_os_version">Версия ОС</string>
     <string name="common_resolution">Разрешение</string>
-    <string name="common_choose">Выбрать...</string>
+    <string name="common_choose">Выбрать…</string>
     <string name="device_list_only_free">Только свободные</string>
     <string name="device_list_only_organization">Не показывать личные устройства</string>
+    <string name="device_list_free">Свободен</string>
+    <string name="device_list_busy">Занят. Арендатор - %s</string>
+    <string name="device_details_your_rent">Находится в Вашем пользовании</string>
+    <string name="device_details_return">Вернуть</string>
+    <string name="device_details_take">Взять</string>
+    <string name="settings_current_user">Текущий пользователь</string>
+    <string name="settings_not_defined">Не выбран</string>
+    <string name="settings_public_account">Общий аккаунт</string>
+    <string name="settings_title">Настройки</string>
+    <string name="settings_save">Сохранить</string>
+    <string name="settings_current_token">Текущий токен</string>
 </resources>

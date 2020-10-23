@@ -10,20 +10,21 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.User
+import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
+import com.jakewharton.rxbinding4.appcompat.navigationClicks
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_device_details.*
 import kotlinx.android.synthetic.main.fragment_device_details.buttonRetry
 import kotlinx.android.synthetic.main.fragment_device_details.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_device_details.viewLoading
-import kotlinx.android.synthetic.main.fragment_device_list.*
-
 
 @AndroidEntryPoint
 class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
@@ -38,10 +39,6 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
     private var deviceInfo: Device? = null
 
     override val showBottomNavigationView = true
-
-    // initial value set to 180 because image needs to be inverted
-    private var angle = 180f
-    private var filtersExpanded = false
 
     override fun callOperations() {
 
@@ -65,6 +62,10 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
         swipeRefreshLayout.setOnRefreshListener {
             makeDevicesRequest()
+        }
+
+        toolbar.navigationClicks().subscribe {
+            findNavController().popBackStack()
         }
 
         deviceId = args.deviceId
@@ -149,12 +150,12 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             OpState.SUCCESS -> {
                 progressBarTake.isGone = true
                 buttonTakeDevice.isClickable = true
-                buttonTakeDevice.text = "ВЗЯТЬ"
+                buttonTakeDevice.text = getString(R.string.device_details_take)
             }
             OpState.FAILURE -> {
                 progressBarTake.isGone = true
                 buttonTakeDevice.isClickable = true
-                buttonTakeDevice.text = "ВЗЯТЬ"
+                buttonTakeDevice.text = getString(R.string.device_details_take)
             }
         }
     }
@@ -169,12 +170,12 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             OpState.SUCCESS -> {
                 progressBarReturn.isGone = true
                 buttonReturnDevice.isClickable = true
-                buttonReturnDevice.text = "ВЗЯТЬ"
+                buttonReturnDevice.text = getString(R.string.device_details_return)
             }
             OpState.FAILURE -> {
                 progressBarReturn.isGone = true
                 buttonReturnDevice.isClickable = true
-                buttonReturnDevice.text = "ВЗЯТЬ"
+                buttonReturnDevice.text = getString(R.string.device_details_return)
             }
         }
     }
@@ -244,12 +245,12 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             } else {
                 val owner = userList.first { deviceInfo.ownerId == it.id }
                 if(owner.id == viewModel.originId) {
-                    textViewDeviceStatus.text = "Находится в Вашем пользовании"
+                    textViewDeviceStatus.text = getString(R.string.device_details_your_rent)
                     imageViewTelegramIcon.isVisible = false
                     textViewDeviceStatus.isClickable = false
                     buttonReturnDevice.isEnabled = true
                 } else {
-                    textViewDeviceStatus.text = "Занят. Арендатор - ${owner.lastName} ${owner.firstName}"
+                    textViewDeviceStatus.text = getString(R.string.device_list_busy, owner.fullName())
                     imageViewTelegramIcon.isVisible = true
                     textViewDeviceStatus.isClickable = true
                     buttonReturnDevice.isEnabled = false

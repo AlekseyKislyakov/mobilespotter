@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:theme="@style/AppTheme">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:navigationIcon="@drawable/ic_arrow_back_black"
+            app:title="@string/settings_title" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/layoutUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="?attr/selectableItemBackground"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textViewUserNameTitle"
+                    style="@style/TextViewHeaderBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/settings_current_user" />
+
+                <TextView
+                    android:id="@+id/textViewUserName"
+                    style="@style/TextViewValueBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    tools:text="Meizu Note 2" />
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:id="@+id/layoutPublicAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                app:layout_constraintTop_toBottomOf="@+id/layoutUserName">
+
+                <TextView
+                    android:id="@+id/textViewDeviceNicknameTitle"
+                    style="@style/TextViewHeaderDefault"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/settings_public_account" />
+
+                <CheckBox
+                    android:id="@+id/checkboxPublicAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_margin="16dp" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/textViewTokenTitle"
+                style="@style/TextViewHeaderDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/settings_current_token"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintTop_toBottomOf="@+id/layoutPublicAccount"/>
+
+            <EditText
+                android:id="@+id/editTextToken"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/textViewTokenTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/buttonApplyToken"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonApplyToken"
+                style="@style/ButtonGreen"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:textAllCaps="true"
+                android:text="@string/settings_save"
+                app:layout_constraintBottom_toBottomOf="@+id/editTextToken"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/editTextToken"
+                app:layout_constraintTop_toTopOf="@+id/editTextToken" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <FrameLayout
+        android:id="@+id/viewLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRetry"
+        style="@style/Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:text="@string/retry_request"
+        android:textAllCaps="false"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

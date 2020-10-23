@@ -15,7 +15,6 @@ import com.example.mobile_spotter.data.entities.OS_ALL
 import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.presentation.base.BaseFragment
-import com.example.mobile_spotter.presentation.userlist.UserListFragmentDirections
 import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.itemClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
@@ -91,7 +90,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         }
 
         toolbar.itemClicks().filter { it.itemId == R.id.actionProfile }.subscribe {
-
+            findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToSettingsFragment())
         }
 
         setupFilterFields()

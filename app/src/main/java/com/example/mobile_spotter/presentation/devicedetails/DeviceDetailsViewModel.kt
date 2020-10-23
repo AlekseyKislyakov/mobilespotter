@@ -16,7 +16,6 @@ import com.example.mobile_spotter.utils.progressive
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-
 class DeviceDetailsViewModel @ViewModelInject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val getUsersUseCase: GetUsersUseCase,

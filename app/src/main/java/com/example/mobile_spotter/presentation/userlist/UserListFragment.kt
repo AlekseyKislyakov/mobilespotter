@@ -14,13 +14,16 @@ import com.example.mobile_spotter.data.navigator.Screens
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
+import com.jakewharton.rxbinding4.appcompat.navigationClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.fragment_user_list.buttonRetry
 import kotlinx.android.synthetic.main.fragment_user_list.toolbar
 import kotlinx.android.synthetic.main.fragment_user_list.viewLoading
+import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -62,6 +65,10 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     override fun onBindViewModel() {
         makeUsersRequest()
 
+        toolbar.navigationClicks().subscribe {
+            findNavController().popBackStack()
+        }
+
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
                 viewModel.setQuery(it)
@@ -87,7 +94,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         }
 
         observe(viewModel.applyUser) {
-            findNavController().navigate(UserListFragmentDirections.actionUserListFragmentToDeviceListFragment(it.id.toString()))
+            findNavController().popBackStack()
             // navigator.navigateToRoot(Screens.DEVICES)
         }
     }

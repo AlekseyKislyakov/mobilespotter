@@ -3,16 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/userListFragment">
+    app:startDestination="@id/deviceListFragment">
 
     <fragment
         android:id="@+id/userListFragment"
         android:name="com.example.mobile_spotter.presentation.userlist.UserListFragment"
         android:label="UserListFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.mobile_spotter.presentation.settings.SettingsFragment"
+        android:label="SettingFragment">
+
         <action
-            android:id="@+id/action_userListFragment_to_deviceListFragment"
-            app:destination="@id/deviceListFragment"
-            app:popUpTo="@id/nav_graph" />
+            android:id="@+id/action_settingsFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
     </fragment>
 
     <fragment
@@ -27,6 +33,9 @@
         <action
             android:id="@+id/action_deviceListFragment_to_deviceDetailsFragment"
             app:destination="@id/deviceDetailsFragment" />
+        <action
+            android:id="@+id/action_deviceListFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
 
     </fragment>
 
@@ -50,10 +59,5 @@
             app:action="android.intent.action.VIEW"
             app:uri="t.me/akislyakov" />
     </fragment>
-
-    <activity
-        android:id="@+id/navigation_endpoint_id"
-        app:action="android.intent.action.VIEW"
-        app:data="t.me/akislyakov"/>
 
 </navigation>

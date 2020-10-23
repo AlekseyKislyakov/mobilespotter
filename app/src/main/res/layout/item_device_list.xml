@@ -3,15 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:paddingTop="10dp"
-    android:layout_height="wrap_content">
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/imageViewDeviceAvatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_margin="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_android_robot" />
@@ -21,10 +24,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewDeviceVersion"
-        app:layout_constraintEnd_toEndOf="parent"
         android:textSize="17sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDeviceVersion"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
         app:layout_constraintTop_toTopOf="@+id/imageViewDeviceAvatar"
@@ -36,8 +39,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toTopOf="@+id/textViewStatus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -53,12 +56,12 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
         android:textStyle="bold"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/imageViewDeviceAvatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
         app:layout_constraintTop_toBottomOf="@+id/textViewDeviceVersion"
-        app:layout_constrainedWidth="true"
         tools:text="Занят. Арендатор - Дьяков Никита svsd sd vvssdvsd vsvd svd vs dvsd " />
 
     <View
@@ -66,8 +69,8 @@
         android:layout_height="1dp"
         android:layout_marginTop="12dp"
         android:background="@color/light_gray"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStatus"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStatus" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
