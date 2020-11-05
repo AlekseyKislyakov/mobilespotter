@@ -7,18 +7,20 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.brandongogetap.stickyheaders.StickyLayoutManager
+import com.example.mobile_spotter.MainActivity
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.UserList
 import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.data.navigator.Screens
+import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
+import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.navigationClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.fragment_user_list.buttonRetry
 import kotlinx.android.synthetic.main.fragment_user_list.toolbar
@@ -26,7 +28,6 @@ import kotlinx.android.synthetic.main.fragment_user_list.viewLoading
 import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
@@ -37,7 +38,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     @Inject
     lateinit var userListAdapter: UserListAdapter
 
-    override val showBottomNavigationView = false
+    override val showFloatingActionButton = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +77,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
         userListAdapter.onUserClickListener = {
             viewModel.selectUser(it)
+            showSnackbar(getString(R.string.user_list_choose_owner, it.fullName()))
         }
 
         userListAdapter.onEmptyListAction = {
@@ -101,6 +103,10 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
     override fun onKeyboardHeightChanged(value: Int) {
 
+    }
+
+    override fun onCodeRecognized(code: String) {
+        showSnackbar(code)
     }
 
     private fun handleGetUsersState(state: OpState) {

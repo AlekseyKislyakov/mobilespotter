@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        android:configChanges="keyboard"
         android:name=".SpotterApp">
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait">

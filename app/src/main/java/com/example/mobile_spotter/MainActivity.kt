@@ -3,12 +3,15 @@ package com.example.mobile_spotter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.lifecycle.Observer
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.NavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity(R.layout.activity_main) {
@@ -43,12 +46,25 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
 //        }
     }
 
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+
+        return super.onKeyDown(keyCode, event)
+    }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         // Now that BottomNavigationBar has restored its instance state
         // and its selectedItemId, we can proceed with setting up the
         // BottomNavigationBar with Navigation
 //        setupBottomNavigationBar()
+    }
+
+    fun showShackbar(text: String, isLong: Boolean) {
+        Snackbar.make(
+            nav_host_fragment,
+            text,
+            if (isLong) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT
+        ).show()
     }
 
 //    private fun setupBottomNavigationBar() {

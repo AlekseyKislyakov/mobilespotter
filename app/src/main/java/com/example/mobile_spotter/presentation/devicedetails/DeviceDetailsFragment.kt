@@ -17,6 +17,7 @@ import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
+import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.navigationClicks
@@ -38,7 +39,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
     private var deviceInfo: Device? = null
 
-    override val showBottomNavigationView = true
+    override val showFloatingActionButton = false
 
     override fun callOperations() {
 
@@ -51,6 +52,13 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
     }
 
     override fun onBindViewModel() {
+        if (viewModel.isPublic == true) {
+            layoutGeneralActions.isVisible = true
+            layoutPrivateActions.isGone = true
+        } else {
+            layoutGeneralActions.isGone = true
+            layoutPrivateActions.isVisible = true
+        }
         makeDevicesRequest()
 
         buttonTakeDevice.setOnClickListener {
@@ -105,6 +113,10 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             }
         }
 
+    }
+
+    override fun onCodeRecognized(code: String) {
+        showSnackbar(code)
     }
 
     override fun onKeyboardHeightChanged(value: Int) {
@@ -185,7 +197,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
     }
 
     private fun handleInfo(userList: List<User>, deviceList: List<Device>) {
-        deviceInfo = deviceList.filter { deviceId == it.id.toString() }.first()
+        deviceInfo = deviceList.firstOrNull { deviceId == it.id.toString() }
         deviceInfo?.let { deviceInfo ->
             //required fields
             if (deviceInfo.osType.toLowerCase() == "android") {
@@ -227,8 +239,20 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 textViewDeviceCommentTitle.isGone = true
             }
 
+            val currentUser = userList.firstOrNull { user -> user.id == viewModel.originId }
+
+            currentUser?.let {
+                textViewUserName.text = it.fullName()
+            } ?: run {
+                textViewUserName.text = getString(R.string.common_not_defined)
+            }
+
+            layoutUserName.setOnClickListener {
+                findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment())
+            }
+
             // check owner and create listener to open telegram
-            if(deviceInfo.ownerId == 0) {
+            if(deviceInfo.ownerId == 0 ||  deviceInfo.ownerId == -1) {
                 textViewDeviceStatus.text = "Свободен"
                 buttonTakeDevice.isEnabled = true
                 textViewDeviceStatus.setTextColor(
@@ -240,28 +264,30 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 )
                 imageViewTelegramIcon.isVisible = false
                 textViewDeviceStatus.isClickable = false
-                buttonTakeDevice.isEnabled = true
                 buttonReturnDevice.isEnabled = false
             } else {
-                val owner = userList.first { deviceInfo.ownerId == it.id }
-                if(owner.id == viewModel.originId) {
+                val owner = userList.firstOrNull { deviceInfo.ownerId == it.id }
+                if(owner?.id == viewModel.originId) {
                     textViewDeviceStatus.text = getString(R.string.device_details_your_rent)
                     imageViewTelegramIcon.isVisible = false
                     textViewDeviceStatus.isClickable = false
                     buttonReturnDevice.isEnabled = true
+                    buttonTakeDevice.isEnabled = false
                 } else {
-                    textViewDeviceStatus.text = getString(R.string.device_list_busy, owner.fullName())
-                    imageViewTelegramIcon.isVisible = true
-                    textViewDeviceStatus.isClickable = true
-                    buttonReturnDevice.isEnabled = false
+                    owner?.let { owner ->
+                        textViewDeviceStatus.text = getString(R.string.device_list_busy, owner.fullName())
+                        imageViewTelegramIcon.isVisible = true
+                        textViewDeviceStatus.isClickable = true
+                        buttonReturnDevice.isEnabled = false
 
-                    textViewDeviceStatus.setOnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.t.me/${owner.telegram}"))
-                        try {
-                            requireContext().startActivity(intent)
-                        } catch (ex: ActivityNotFoundException) {
-                            intent.setPackage(null)
-                            requireContext().startActivity(intent)
+                        textViewDeviceStatus.setOnClickListener {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.t.me/${owner.telegram}"))
+                            try {
+                                requireContext().startActivity(intent)
+                            } catch (ex: ActivityNotFoundException) {
+                                intent.setPackage(null)
+                                requireContext().startActivity(intent)
+                            }
                         }
                     }
                 }
@@ -273,12 +299,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                         null
                     )
                 )
-
-                buttonTakeDevice.isEnabled = false
-
             }
         }
-
     }
-
 }

@@ -9,6 +9,7 @@ import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.ext.observe
+import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +21,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private val viewModel by viewModels<ProfileViewModel>()
 
-    override val showBottomNavigationView = true
+    override val showFloatingActionButton = true
 
     override fun callOperations() {
 
@@ -76,6 +77,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun makeDevicesRequest() {
         viewModel.getDevices()
+    }
+
+    override fun onCodeRecognized(code: String) {
+        showSnackbar(code)
     }
 
     private fun handleInfo(userList: List<User>, deviceList: List<Device>) {

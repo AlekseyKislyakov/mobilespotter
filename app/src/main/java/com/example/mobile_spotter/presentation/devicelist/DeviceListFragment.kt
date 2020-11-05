@@ -14,6 +14,7 @@ import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.data.entities.OS_ALL
 import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.ext.observe
+import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.itemClicks
@@ -25,7 +26,6 @@ import kotlinx.android.synthetic.main.fragment_device_list.buttonRetry
 import kotlinx.android.synthetic.main.fragment_device_list.emptyView
 import kotlinx.android.synthetic.main.fragment_device_list.toolbar
 import kotlinx.android.synthetic.main.fragment_device_list.viewLoading
-import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.view_string_picker.view.*
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
@@ -54,7 +54,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     private var refreshFilters = false
 
-    override val showBottomNavigationView = true
+    override val showFloatingActionButton = true
 
     // initial value set to 180 because image needs to be inverted
     private var angle = 180f
@@ -69,6 +69,16 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         searchView = (toolbar.menu.findItem(R.id.actionSearch).actionView as SearchView)
         searchView.maxWidth = Int.MAX_VALUE
+        searchView.setOnFocusChangeListener { view, isFocused -> 
+            if (!isFocused) {
+                editTextRfidListener.requestFocus()
+            }
+        }
+        
+        editTextRfidListener.setOnKeyListener { view, i, keyEvent ->
+            showSnackbar(keyEvent.toString())
+            true
+        }
 
         buttonRetry.setOnClickListener {
             makeDevicesRequest()
@@ -93,7 +103,17 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToSettingsFragment())
         }
 
+        editTextRfidListener.requestFocus()
+        editTextRfidListener.setOnKeyListener { view, i, keyEvent ->
+            showSnackbar("lol", false)
+            true
+        }
+
         setupFilterFields()
+    }
+
+    override fun onCodeRecognized(code: String) {
+        showSnackbar(code)
     }
 
     override fun onBindViewModel() {
@@ -131,7 +151,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             viewModel.filterParameters.value?.let { filter ->
                 deviceListAdapter.applyFilter(filter, query)
             }
-
         }
 
         observe(viewModel.refreshFilters) {
@@ -153,6 +172,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     private fun handleGetDevicesState(state: OpState) {
         when (state) {
             OpState.LOADING -> {
+                emptyView.isGone = true
                 viewLoading.isVisible = true
                 buttonRetry.isGone = true
                 recyclerViewDevices.isVisible = false
@@ -164,6 +184,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 swipeRefreshLayout.isRefreshing = false
             }
             OpState.FAILURE -> {
+                emptyView.isGone = true
                 viewLoading.isVisible = false
                 buttonRetry.isVisible = true
                 recyclerViewDevices.isVisible = false

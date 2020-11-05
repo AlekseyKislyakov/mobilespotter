@@ -22,6 +22,9 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
 
     private val filteredDevices = mutableListOf<FullDeviceInfo>()
 
+    private var currentQuery = ""
+    private var currentFilter = DeviceFilter()
+
     var onClickListener: (Device) -> Unit = {}
     var onEmptyListAction: (Boolean) -> Unit = {}
 
@@ -53,6 +56,9 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
     }
 
     fun applyFilter(filter: DeviceFilter, query: String) {
+        currentFilter = filter
+        currentQuery = query
+
         if(deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(false)
         }
@@ -88,6 +94,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
     private fun handleData() {
         filteredDevices.clear()
         filteredDevices.addAll(deviceData)
+        applyFilter(currentFilter, currentQuery)
 
         notifyDataSetChanged()
     }

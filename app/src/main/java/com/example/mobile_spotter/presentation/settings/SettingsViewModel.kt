@@ -26,7 +26,12 @@ class SettingsViewModel @ViewModelInject constructor(
 
     val getUsersOperation = MutableLiveData<LongOperation<UserList>>()
 
-    val token: String
+    var token: String
+        get() = preferencesStorage.token ?: ""
+        set(token) {
+            preferencesStorage.token = token
+        }
+
 
     private var publicAccount = preferencesStorage.publicAccount
 

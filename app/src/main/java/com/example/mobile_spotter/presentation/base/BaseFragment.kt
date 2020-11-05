@@ -1,6 +1,10 @@
 package com.example.mobile_spotter.presentation.base
 
+import android.app.Dialog
+import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
+import android.view.KeyEvent.KEYCODE_ENTER
+import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
@@ -8,13 +12,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.ext.KeyboardShowListener
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.hilt.android.AndroidEntryPoint
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.view_rfid_dialog.view.*
+import kotlinx.coroutines.*
 
-abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout), KeyboardShowListener {
 
-    open val showBottomNavigationView: Boolean
-        get() = (parentFragment as? BaseFragment)?.showBottomNavigationView ?: false
+abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), KeyboardShowListener {
+
+    private var readRfidCardDialog: Dialog? = null
+
+    open val showFloatingActionButton: Boolean
+        get() = (parentFragment as? BaseFragment)?.showFloatingActionButton ?: false
+
 
     // private val plugins = mutableListOf<BasePlugin>()
 
@@ -41,7 +50,7 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout), KeyboardS
         // Timber.d("onActivityCreated $this")
         // dispatchEventToPlugins(LifecycleEvent.OnActivityCreated(savedInstanceState))
         this.setKeyboardListener()
-        setupBottomNavigationVisibility()
+        setupRFIDButtonVisibility()
         onSetupLayout(savedInstanceState)
         onBindViewModel()
     }
@@ -95,9 +104,14 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout), KeyboardS
      */
     abstract fun onBindViewModel()
 
-    private fun setupBottomNavigationVisibility() {
-//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-//        bottomNavigationView?.isVisible = showBottomNavigationView
+    abstract fun onCodeRecognized(code: String)
+
+    private fun setupRFIDButtonVisibility() {
+        val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
+        fab?.isVisible = showFloatingActionButton
+        fab?.setOnClickListener {
+            createChooseResolutionDialog()?.show()
+        }
     }
 
     fun hideBottomNavigation() {
@@ -110,12 +124,55 @@ abstract class BaseFragment(@LayoutRes layout: Int): Fragment(layout), KeyboardS
 //        bottomNavigationView?.isVisible = true
     }
 
+
     override fun onKeyboardHeightChanged(value: Int) {
-        if(value != -1) {
+        if (value != -1) {
             hideBottomNavigation()
         } else {
             showBottomNavigation()
         }
+    }
+
+    private fun createChooseResolutionDialog(): Dialog? {
+        activity?.let { context ->
+            if (readRfidCardDialog == null) {
+                val rfidDialogView = LayoutInflater.from(context)
+                        .inflate(R.layout.view_rfid_dialog, null)
+
+                with(rfidDialogView) {
+                    editTextRfidListener.requestFocus()
+                    editTextRfidListener.setOnKeyListener { view, i, keyEvent ->
+                        if (keyEvent.keyCode == KEYCODE_ENTER && editTextRfidListener.text.toString().trim().isNotEmpty()) {
+                            onCodeRecognized(editTextRfidListener.text.toString().trim())
+                            editTextRfidListener.setText("")
+                            val anim = (imageViewRfidIcon.drawable as TransitionDrawable)
+                                    anim.startTransition(100)
+
+                            GlobalScope.launch {
+                                delay(500)
+                                withContext(Dispatchers.Main) {
+                                    anim.resetTransition()
+                                    readRfidCardDialog?.dismiss()
+                                }
+                            }
+                        }
+
+                        false
+                    }
+                    buttonDiscard.setOnClickListener {
+                        readRfidCardDialog?.dismiss()
+                    }
+
+                    readRfidCardDialog = Dialog(context, R.style.DialogTheme).apply {
+                        setCancelable(true)
+                        setCanceledOnTouchOutside(true)
+                        setContentView(rfidDialogView)
+                    }
+                }
+            }
+        }
+
+        return readRfidCardDialog
     }
 
     // region Plugins

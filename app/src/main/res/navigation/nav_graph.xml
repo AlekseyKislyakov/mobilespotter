@@ -47,9 +47,10 @@
         <argument
             android:name="deviceId"
             app:argType="string" />
+
         <action
-            android:id="@+id/action_deviceDetailsFragment_to_deviceListFragment"
-            app:destination="@id/deviceListFragment" />
+            android:id="@+id/action_deviceListFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
 
         <action
             android:id="@+id/action_deviceDetailsFragment_to_navigation"

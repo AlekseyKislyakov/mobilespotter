@@ -33,7 +33,6 @@ class DeviceListViewModel @ViewModelInject constructor(
 
     val deviceListLiveData = MutableLiveData<List<Device>>()
 
-
     val filterParameters = MutableLiveData(DeviceFilter())
     var initialRequest = true
 

@@ -32,7 +32,7 @@
     <string name="details_comment_title">Комментарий</string>
     <string name="details_take">ВЗЯТЬ</string>
     <string name="details_return">ВЕРНУТЬ</string>
-    <string name="common_empty">Ничего не найдено </string>
+    <string name="common_empty">Ничего не найдено :(</string>
     <string name="common_all">Все</string>
     <string name="common_android">Android</string>
     <string name="common_ios">iOS</string>
@@ -52,4 +52,9 @@
     <string name="settings_title">Настройки</string>
     <string name="settings_save">Сохранить</string>
     <string name="settings_current_token">Текущий токен</string>
+    <string name="user_list_choose_owner">Выбран пользователь: %s</string>
+    <string name="rfid_put_card">Приложите RFID-чип к считывателю</string>
+    <string name="common_cancel">Отмена</string>
+    <string name="device_details_current_user">Текущий пользователь</string>
+    <string name="common_not_defined">Не указан</string>
 </resources>

@@ -8,13 +8,17 @@ import androidx.navigation.fragment.findNavController
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.ext.fullName
+import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.navigationClicks
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_device_details.buttonRetry
 import kotlinx.android.synthetic.main.fragment_device_details.viewLoading
+import kotlinx.android.synthetic.main.fragment_device_list.*
 import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_settings.swipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_settings.toolbar
 
 
 @AndroidEntryPoint
@@ -22,7 +26,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private val viewModel by viewModels<SettingsViewModel>()
 
-    override val showBottomNavigationView = true
+    override val showFloatingActionButton = true
 
 
     override fun callOperations() {
@@ -44,6 +48,10 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
             findNavController().popBackStack()
         }
 
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.getUsers()
+        }
+
         viewModel.getUsers()
 
         buttonRetry.setOnClickListener {
@@ -63,10 +71,10 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
             viewModel.setPublicAccountValue(isChecked)
         }
 
-        editTextToken.setText(viewModel.getToken())
+        editTextToken.setText(viewModel.token)
 
         buttonApplyToken.setOnClickListener {
-            viewModel.setToken(editTextToken.text)
+            viewModel.token = editTextToken.text.toString()
         }
 
     }
@@ -76,7 +84,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
     }
 
     private fun setUserData(userList: List<User>) {
-        val currentUser = userList.filter { it.id == viewModel.getCurrentUserId() }.firstOrNull()
+        val currentUser = userList.firstOrNull { it.id == viewModel.getCurrentUserId() }
         if(currentUser != null) {
             textViewUserName.text = currentUser.fullName()
         } else {
@@ -95,13 +103,19 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 viewLoading.isVisible = false
                 buttonRetry.isGone = true
                 layoutContent.isVisible = true
+                swipeRefreshLayout.isRefreshing = false
             }
             OpState.FAILURE -> {
                 viewLoading.isVisible = false
                 buttonRetry.isVisible = true
                 layoutContent.isVisible = false
+                swipeRefreshLayout.isRefreshing = false
             }
         }
+    }
+
+    override fun onCodeRecognized(code: String) {
+        showSnackbar(code)
     }
 
 }

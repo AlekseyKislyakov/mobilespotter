@@ -32,6 +32,7 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     val returnDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
 
     val originId = preferencesStorage.userId
+    val isPublic = preferencesStorage.publicAccount
 
     fun getDevices() {
         makeDevicesRequest()
