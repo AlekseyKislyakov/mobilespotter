@@ -4,6 +4,7 @@
     <string name="userlist_search_user">Поиск пользователя</string>
     <string name="userlist_search_hint">Иванов Вася</string>
     <string name="profile">Профиль</string>
+    <string name="settings">Настройки</string>
     <string name="take_device">Взять устройство</string>
     <string name="device_list">Список устройств</string>
     <string name="retry_request">Повторить</string>
@@ -31,7 +32,9 @@
     <string name="details_type_title">Тип устройства</string>
     <string name="details_comment_title">Комментарий</string>
     <string name="details_take">ВЗЯТЬ</string>
+    <string name="details_take_as">ВЗЯТЬ КАК \n%s</string>
     <string name="details_return">ВЕРНУТЬ</string>
+    <string name="details_return_as">ВЕРНУТЬ КАК \n%s</string>
     <string name="common_empty">Ничего не найдено :(</string>
     <string name="common_all">Все</string>
     <string name="common_android">Android</string>
@@ -57,4 +60,6 @@
     <string name="common_cancel">Отмена</string>
     <string name="device_details_current_user">Текущий пользователь</string>
     <string name="common_not_defined">Не указан</string>
+    <string name="device_list_choose_value">Выберите значение</string>
+    <string name="common_ok">Ок</string>
 </resources>

@@ -60,25 +60,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     private var angle = 180f
     private var filtersExpanded = false
 
-    override fun callOperations() {
-
-    }
-
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         toolbar.inflateMenu(R.menu.menu_devicelist)
 
         searchView = (toolbar.menu.findItem(R.id.actionSearch).actionView as SearchView)
         searchView.maxWidth = Int.MAX_VALUE
-        searchView.setOnFocusChangeListener { view, isFocused -> 
-            if (!isFocused) {
-                editTextRfidListener.requestFocus()
-            }
-        }
-        
-        editTextRfidListener.setOnKeyListener { view, i, keyEvent ->
-            showSnackbar(keyEvent.toString())
-            true
-        }
 
         buttonRetry.setOnClickListener {
             makeDevicesRequest()
@@ -103,12 +89,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToSettingsFragment())
         }
 
-        editTextRfidListener.requestFocus()
-        editTextRfidListener.setOnKeyListener { view, i, keyEvent ->
-            showSnackbar("lol", false)
-            true
-        }
-
         setupFilterFields()
     }
 
@@ -131,7 +111,9 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
                 viewModel.setQuery(it)
             }
+    }
 
+    override fun observeOperations() {
         observe(viewModel.getUsersOperation) {
             handleGetDevicesState(it.state)
             it.doOnSuccess { userInfo ->
@@ -286,9 +268,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                         chooseResolutionDialog?.dismiss()
                     }
 
-                    buttonDiscard.setOnClickListener {
-                        chooseResolutionDialog?.dismiss()
-                    }
                     chooseResolutionDialog = Dialog(context, R.style.DialogTheme).apply {
                         setCancelable(true)
                         setCanceledOnTouchOutside(true)
@@ -320,10 +299,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                         viewModel.setOsList(versionListAdapter.selectedSet)
                         chooseVersionDialog?.dismiss()
                     }
-
-                    buttonDiscard.setOnClickListener {
-                        chooseVersionDialog?.dismiss()
-                    }
+                    
                     chooseVersionDialog = Dialog(context, R.style.DialogTheme).apply {
                         setCancelable(true)
                         setCanceledOnTouchOutside(true)

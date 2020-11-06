@@ -13,6 +13,18 @@ const val FRONTEND_TCS = 26
 const val SERVICE = 18
 const val HEAD = 1
 
+val departmentPriority = listOf(
+        QA,
+        ANDROID,
+        IOS,
+        HEAD,
+        BACKEND_JAVA,
+        BACKEND_PHP,
+        BACKEND_PYTHON,
+        FRONTEND_JS,
+        FRONTEND_TCS,
+        SERVICE
+)
 
 fun Int.recognize(): Int {
     return when(this) {

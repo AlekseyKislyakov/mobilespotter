@@ -8,22 +8,6 @@
     android:background="@color/white"
     android:theme="@style/AppTheme">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:navigationIcon="@drawable/ic_arrow_back_black"
-            app:title="@string/userslist_toolbar_title"
-            app:layout_scrollFlags="scroll|enterAlways|snap"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,6 +40,52 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/common_empty"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:navigationIcon="@drawable/ic_arrow_back_black"
+            app:title="@string/userslist_toolbar_title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSectionFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="3"
+            android:visibility="gone"
+            tools:listitem="@layout/item_filter_with_stroke" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonRetry"
         style="@style/Button"
@@ -64,22 +94,6 @@
         android:layout_gravity="center"
         android:text="@string/retry_request"
         android:textAllCaps="false" />
-
-    <TextView
-        android:id="@+id/emptyView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/common_empty"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

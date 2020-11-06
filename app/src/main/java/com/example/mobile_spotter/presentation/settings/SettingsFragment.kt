@@ -28,11 +28,6 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     override val showFloatingActionButton = true
 
-
-    override fun callOperations() {
-
-    }
-
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         layoutUserName.setOnClickListener {
             findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToUserListFragment())
@@ -75,7 +70,12 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
         buttonApplyToken.setOnClickListener {
             viewModel.token = editTextToken.text.toString()
+            showSnackbar("Токен сохранен!")
         }
+
+    }
+
+    override fun observeOperations() {
 
     }
 

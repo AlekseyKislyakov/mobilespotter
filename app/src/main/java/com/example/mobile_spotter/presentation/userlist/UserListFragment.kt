@@ -7,11 +7,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.brandongogetap.stickyheaders.StickyLayoutManager
-import com.example.mobile_spotter.MainActivity
 import com.example.mobile_spotter.R
+import com.example.mobile_spotter.data.entities.Section
 import com.example.mobile_spotter.data.entities.UserList
-import com.example.mobile_spotter.data.navigator.AppNavigator
-import com.example.mobile_spotter.data.navigator.Screens
+import com.example.mobile_spotter.data.entities.recognize
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
@@ -25,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_user_list.*
 import kotlinx.android.synthetic.main.fragment_user_list.buttonRetry
 import kotlinx.android.synthetic.main.fragment_user_list.toolbar
 import kotlinx.android.synthetic.main.fragment_user_list.viewLoading
-import kotlinx.coroutines.delay
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -38,15 +36,10 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     @Inject
     lateinit var userListAdapter: UserListAdapter
 
+    @Inject
+    lateinit var sectionListAdapter: SectionListAdapter
+
     override val showFloatingActionButton = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun callOperations() {
-
-    }
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         toolbar.inflateMenu(R.menu.menu_userlist)
@@ -61,6 +54,8 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         val stickyLayoutManager = StickyLayoutManager(context, userListAdapter)
         recyclerViewUsers.layoutManager = stickyLayoutManager
         recyclerViewUsers.adapter = userListAdapter
+
+        recyclerViewSectionFilters.adapter = sectionListAdapter
     }
 
     override fun onBindViewModel() {
@@ -71,9 +66,9 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         }
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                viewModel.setQuery(it)
-            }
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    viewModel.setQuery(it)
+                }
 
         userListAdapter.onUserClickListener = {
             viewModel.selectUser(it)
@@ -84,6 +79,12 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
             emptyView.isVisible = it
         }
 
+        sectionListAdapter.onSectionListChangeListener = {
+            userListAdapter.applySectionList(it)
+        }
+    }
+
+    override fun observeOperations() {
         observe(viewModel.getUsersOperation) {
             handleGetUsersState(it.state)
             it.doOnSuccess { userInfo ->
@@ -92,12 +93,11 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         }
 
         observe(viewModel.queryLiveData) {
-            userListAdapter.applyQuery(it.toString())
+            userListAdapter.applyFilters(it.toString())
         }
 
         observe(viewModel.applyUser) {
             findNavController().popBackStack()
-            // navigator.navigateToRoot(Screens.DEVICES)
         }
     }
 
@@ -132,6 +132,11 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     private fun handleGetUsersInfo(list: UserList) {
         if (list.isNotEmpty()) {
             userListAdapter.applyData(list)
+            sectionListAdapter.setItems(list.map {
+                Section(it.department.toString(), getString(it.department.recognize()), false)
+            })
+            recyclerViewSectionFilters.isVisible = true
+
         }
     }
 

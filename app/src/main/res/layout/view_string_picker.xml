@@ -9,7 +9,7 @@
         android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Привет"
+        android:text="@string/device_list_choose_value"
         android:textSize="22sp"
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
@@ -38,19 +38,9 @@
             android:textStyle="bold"
             android:padding="20dp"
             android:textColor="@color/soft_green"
-            android:text="Ок"
-            android:clickable="true" />
-
-        <TextView
-            android:id="@+id/buttonDiscard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/buttonApply"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:textStyle="bold"
-            android:padding="20dp"
-            android:text="Отмена"
-            android:clickable="true" />
+            android:text="@string/common_ok"
+            android:clickable="true"
+            android:focusable="true" />
 
     </RelativeLayout>
 

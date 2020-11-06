@@ -23,10 +23,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     override val showFloatingActionButton = true
 
-    override fun callOperations() {
-
-    }
-
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         toolbar.inflateMenu(R.menu.menu_profile)
 
@@ -37,7 +33,9 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     override fun onBindViewModel() {
         makeDevicesRequest()
+    }
 
+    override fun observeOperations() {
         observe(viewModel.getUsersOperation) {
             handleGetDevicesState(it.state)
             it.doOnSuccess { userInfo ->
@@ -48,7 +46,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         observe(viewModel.getDevicesOperation) {
             handleGetDevicesState(it.state)
         }
-
     }
 
     override fun onKeyboardHeightChanged(value: Int) {

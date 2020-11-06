@@ -10,8 +10,8 @@
 
     <item
         android:id="@+id/actionProfile"
-        android:icon="@drawable/ic_profile_black"
-        android:title="@string/profile"
+        android:icon="@drawable/ic_settings_black"
+        android:title="@string/settings"
         app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

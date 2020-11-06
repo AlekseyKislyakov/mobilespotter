@@ -32,18 +32,6 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
         if (savedInstanceState == null) {
 //            setupBottomNavigationBar()
         }
-
-//        bottomNavigationView.setupWithNavController(
-//            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController.apply {
-//                addOnDestinationChangedListener(this@MainActivity)
-//                NavigationUI.setupWithNavController(bottomNavigationView, this)
-//            }
-//        )
-//
-//
-//        bottomNavigationView.setOnNavigationItemSelectedListener {item ->
-//            onNavDestinationSelected(item, Navigation.findNavController(this, R.id.nav_host_fragment))
-//        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -65,6 +53,16 @@ class MainActivity : FragmentActivity(R.layout.activity_main) {
             text,
             if (isLong) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT
         ).show()
+    }
+
+    fun showActionShackbar(text: String, block: (Unit) -> Unit) {
+        Snackbar.make(
+                nav_host_fragment,
+                text,
+                Snackbar.LENGTH_INDEFINITE
+        ).setAction("Перейти") {
+            block.invoke(Unit)
+        }.show()
     }
 
 //    private fun setupBottomNavigationBar() {

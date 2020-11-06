@@ -45,6 +45,10 @@ fun Fragment.showSnackbar(text: String, isLong: Boolean = false) {
     (activity as MainActivity).showShackbar(text, isLong)
 }
 
+fun Fragment.showActionSnackbar(text: String, block: (Unit) -> Unit) {
+    (activity as MainActivity).showActionShackbar(text, block)
+}
+
 interface KeyboardShowListener {
 
     fun onKeyboardHeightChanged(value: Int)

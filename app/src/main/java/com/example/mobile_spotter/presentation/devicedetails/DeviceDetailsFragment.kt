@@ -17,6 +17,7 @@ import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
+import com.example.mobile_spotter.ext.showActionSnackbar
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
@@ -41,8 +42,42 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
     override val showFloatingActionButton = false
 
-    override fun callOperations() {
+    override fun observeOperations() {
+        observe(viewModel.getUsersOperation) {
+            handleGetDevicesState(it.state)
+            it.doOnSuccess { userInfo ->
+                handleInfo(userInfo, viewModel.deviceListLiveData.value ?: emptyList())
+            }
+        }
 
+        observe(viewModel.getDevicesOperation) {
+            handleGetDevicesState(it.state)
+        }
+
+        observe(viewModel.takeDeviceLiveData) {
+            handleTakeDeviceState(it.state)
+            it.doOnSuccess {
+                AlertDialog.Builder(requireContext())
+                        .setTitle("Устройство успешно взято")
+                        .setPositiveButton("Ok", null)
+                        .setOnDismissListener {
+                            makeDevicesRequest()
+                        }
+                        .show()
+            }
+        }
+        observe(viewModel.returnDeviceLiveData) {
+            handleReturnDeviceState(it.state)
+            it.doOnSuccess {
+                AlertDialog.Builder(requireContext())
+                        .setTitle("Устройство успешно сдано")
+                        .setPositiveButton("Ok", null)
+                        .setOnDismissListener {
+                            makeDevicesRequest()
+                        }
+                        .show()
+            }
+        }
     }
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
@@ -67,6 +102,12 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
         buttonReturnDevice.setOnClickListener {
             viewModel.returnDevice()
         }
+        buttonTakeDeviceGeneral.setOnClickListener {
+            viewModel.takeDevice()
+        }
+        buttonReturnDeviceGeneral.setOnClickListener {
+            viewModel.returnDevice()
+        }
 
         swipeRefreshLayout.setOnRefreshListener {
             makeDevicesRequest()
@@ -77,42 +118,6 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
         }
 
         deviceId = args.deviceId
-        observe(viewModel.getUsersOperation) {
-            handleGetDevicesState(it.state)
-            it.doOnSuccess { userInfo ->
-                handleInfo(userInfo, viewModel.deviceListLiveData.value ?: emptyList())
-            }
-        }
-
-        observe(viewModel.getDevicesOperation) {
-            handleGetDevicesState(it.state)
-        }
-
-        observe(viewModel.takeDeviceLiveData) {
-            handleTakeDeviceState(it.state)
-            it.doOnSuccess {
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Устройство успешно взято")
-                    .setPositiveButton("Ok", null)
-                    .setOnDismissListener {
-                        makeDevicesRequest()
-                    }
-                    .show()
-            }
-        }
-        observe(viewModel.returnDeviceLiveData) {
-            handleReturnDeviceState(it.state)
-            it.doOnSuccess {
-                AlertDialog.Builder(requireContext())
-                    .setTitle("Устройство успешно сдано")
-                    .setPositiveButton("Ok", null)
-                    .setOnDismissListener {
-                        makeDevicesRequest()
-                    }
-                    .show()
-            }
-        }
-
     }
 
     override fun onCodeRecognized(code: String) {
@@ -243,8 +248,12 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
             currentUser?.let {
                 textViewUserName.text = it.fullName()
+                buttonTakeDeviceGeneral.text = getString(R.string.details_take_as, it.fullName())
+                buttonReturnDeviceGeneral.text = getString(R.string.details_return_as, it.fullName())
             } ?: run {
                 textViewUserName.text = getString(R.string.common_not_defined)
+                buttonTakeDeviceGeneral.text = getString(R.string.details_take)
+                buttonReturnDeviceGeneral.text = getString(R.string.details_return)
             }
 
             layoutUserName.setOnClickListener {
@@ -252,9 +261,10 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             }
 
             // check owner and create listener to open telegram
-            if(deviceInfo.ownerId == 0 ||  deviceInfo.ownerId == -1) {
+            if(deviceInfo.ownerId == 0 || deviceInfo.ownerId == -1) {
                 textViewDeviceStatus.text = "Свободен"
                 buttonTakeDevice.isEnabled = true
+                buttonTakeDeviceGeneral.isEnabled = true
                 textViewDeviceStatus.setTextColor(
                     ResourcesCompat.getColor(
                         resources,
@@ -265,6 +275,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 imageViewTelegramIcon.isVisible = false
                 textViewDeviceStatus.isClickable = false
                 buttonReturnDevice.isEnabled = false
+                buttonReturnDeviceGeneral.isEnabled = false
             } else {
                 val owner = userList.firstOrNull { deviceInfo.ownerId == it.id }
                 if(owner?.id == viewModel.originId) {
@@ -272,13 +283,16 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                     imageViewTelegramIcon.isVisible = false
                     textViewDeviceStatus.isClickable = false
                     buttonReturnDevice.isEnabled = true
+                    buttonReturnDeviceGeneral.isEnabled = true
                     buttonTakeDevice.isEnabled = false
+                    buttonTakeDeviceGeneral.isEnabled = false
                 } else {
                     owner?.let { owner ->
                         textViewDeviceStatus.text = getString(R.string.device_list_busy, owner.fullName())
                         imageViewTelegramIcon.isVisible = true
                         textViewDeviceStatus.isClickable = true
                         buttonReturnDevice.isEnabled = false
+                        buttonReturnDeviceGeneral.isEnabled = false
 
                         textViewDeviceStatus.setOnClickListener {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.t.me/${owner.telegram}"))
@@ -299,6 +313,16 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                         null
                     )
                 )
+            }
+
+            if(currentUser == null) {
+                buttonTakeDevice.isEnabled = false
+                buttonReturnDevice.isEnabled = false
+                buttonTakeDeviceGeneral.isEnabled = false
+                buttonReturnDeviceGeneral.isEnabled = false
+                showActionSnackbar("Пользователь не указан") {
+                    findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment())
+                }
             }
         }
     }
