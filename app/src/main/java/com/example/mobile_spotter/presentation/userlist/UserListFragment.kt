@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
+import com.example.mobile_spotter.data.entities.ALL
 import com.example.mobile_spotter.data.entities.Section
 import com.example.mobile_spotter.data.entities.UserList
 import com.example.mobile_spotter.data.entities.recognize
@@ -131,10 +132,13 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
     private fun handleGetUsersInfo(list: UserList) {
         if (list.isNotEmpty()) {
-            userListAdapter.applyData(list)
-            sectionListAdapter.setItems(list.map {
+            val sectionList = list.map {
                 Section(it.department.toString(), getString(it.department.recognize()), false)
-            })
+            }.toMutableList()
+            sectionList.add(0, Section(ALL, context?.getString(R.string.common_all) ?: "", true))
+
+            userListAdapter.applyData(list)
+            sectionListAdapter.setItems(sectionList)
             recyclerViewSectionFilters.isVisible = true
 
         }

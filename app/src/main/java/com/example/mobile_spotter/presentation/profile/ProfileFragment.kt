@@ -7,14 +7,12 @@ import androidx.fragment.app.viewModels
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.User
-import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.OpState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_device_details.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {

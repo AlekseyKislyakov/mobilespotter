@@ -14,5 +14,5 @@
         android:id="@+id/nav_graph_profile"
         android:enabled="true"
         android:icon="@drawable/ic_change"
-        android:title="@string/take_device" />
+        android:title="@string/device_details_take_device" />
 </menu>

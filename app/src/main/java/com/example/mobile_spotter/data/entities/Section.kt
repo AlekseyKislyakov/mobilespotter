@@ -5,3 +5,5 @@ data class Section(
     val name: String,
     var isSelected: Boolean
 )
+
+const val ALL = "all"

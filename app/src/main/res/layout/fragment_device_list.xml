@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:title="@string/devicelist_toolbar_title" />
+            app:title="@string/device_list_toolbar_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|start"
                         android:layout_marginStart="16dp"
-                        android:text="@string/search_parameters"
+                        android:text="@string/common_search_parameters"
                         android:textSize="17sp" />
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -225,7 +225,7 @@
                 style="@style/Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/retry_request"
+                android:text="@string/common_retry_request"
                 android:textAllCaps="false"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"

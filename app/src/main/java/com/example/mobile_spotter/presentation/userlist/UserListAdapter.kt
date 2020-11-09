@@ -108,7 +108,7 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
 
     fun applySectionList(sections: List<Section>) {
         if (sections.isNotEmpty()) {
-            if (sections.firstOrNull { it.id == "all" }?.isSelected == true) {
+            if (sections.firstOrNull { it.id == ALL }?.isSelected == true) {
                 applyFilters(currentQuery)
             } else {
                 applyFilters(currentQuery, sections)

@@ -9,40 +9,40 @@
         android:id="@+id/dialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/rfid_put_card"
-        android:textSize="22sp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dp"
         android:layout_marginBottom="10dp"
-        android:textStyle="bold"/>
+        android:text="@string/common_rfid_put_card"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageViewRfidIcon"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:layout_gravity="center"
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/black"
-        android:layout_gravity="center"
-        android:src="@drawable/status_transition"/>
+        android:src="@drawable/status_transition" />
 
-        <TextView
-            android:id="@+id/buttonDiscard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:textStyle="bold"
-            android:padding="20dp"
-            android:text="@string/common_cancel"
-            android:clickable="true"
-            android:focusable="true" />
+    <TextView
+        android:id="@+id/buttonDiscard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="20dp"
+        android:text="@string/common_cancel"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/editTextRfidListener"
         android:layout_width="1dp"
         android:layout_height="1dp"
-        android:focusable="true"
-        android:clickable="false" />
+        android:clickable="false"
+        android:focusable="true" />
 
 </LinearLayout>

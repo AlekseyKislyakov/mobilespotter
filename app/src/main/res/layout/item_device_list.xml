@@ -11,10 +11,10 @@
         android:id="@+id/imageViewDeviceAvatar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_android_robot" />

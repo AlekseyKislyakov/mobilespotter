@@ -1,7 +1,6 @@
 package com.example.mobile_spotter.presentation.devicedetails
 
 import android.content.ActivityNotFoundException
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -248,12 +247,12 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
             currentUser?.let {
                 textViewUserName.text = it.fullName()
-                buttonTakeDeviceGeneral.text = getString(R.string.details_take_as, it.fullName())
-                buttonReturnDeviceGeneral.text = getString(R.string.details_return_as, it.fullName())
+                buttonTakeDeviceGeneral.text = getString(R.string.device_details_take_as, it.fullName())
+                buttonReturnDeviceGeneral.text = getString(R.string.device_details_return_as, it.fullName())
             } ?: run {
                 textViewUserName.text = getString(R.string.common_not_defined)
-                buttonTakeDeviceGeneral.text = getString(R.string.details_take)
-                buttonReturnDeviceGeneral.text = getString(R.string.details_return)
+                buttonTakeDeviceGeneral.text = getString(R.string.device_details_take)
+                buttonReturnDeviceGeneral.text = getString(R.string.device_details_return)
             }
 
             layoutUserName.setOnClickListener {

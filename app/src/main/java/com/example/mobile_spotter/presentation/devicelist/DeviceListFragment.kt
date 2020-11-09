@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.data.entities.OS_ALL
-import com.example.mobile_spotter.data.navigator.AppNavigator
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
@@ -45,9 +44,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     @Inject
     lateinit var versionListAdapter: CheckBoxListAdapter
-
-    @Inject
-    lateinit var navigator: AppNavigator
 
     private var chooseResolutionDialog: Dialog? = null
     private var chooseVersionDialog: Dialog? = null

@@ -68,7 +68,7 @@
             android:background="@color/white"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:navigationIcon="@drawable/ic_arrow_back_black"
-            app:title="@string/userslist_toolbar_title" />
+            app:title="@string/user_list_toolbar_title" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewSectionFilters"
@@ -78,10 +78,10 @@
             android:orientation="horizontal"
             android:paddingTop="8dp"
             android:paddingBottom="12dp"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="3"
             android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            tools:itemCount="3"
             tools:listitem="@layout/item_filter_with_stroke" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -92,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/retry_request"
+        android:text="@string/common_retry_request"
         android:textAllCaps="false" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,15 +1,25 @@
 <resources>
+
     <string name="app_name">mobile-spotter</string>
-    <string name="userslist_toolbar_title">Выбор пользователя</string>
-    <string name="userlist_search_user">Поиск пользователя</string>
-    <string name="userlist_search_hint">Иванов Вася</string>
     <string name="profile">Профиль</string>
     <string name="settings">Настройки</string>
-    <string name="take_device">Взять устройство</string>
-    <string name="device_list">Список устройств</string>
-    <string name="retry_request">Повторить</string>
 
-<!--    departments-->
+    <!--    common-->
+    <string name="common_empty">Ничего не найдено :(</string>
+    <string name="common_all">Все</string>
+    <string name="common_android">Android</string>
+    <string name="common_ios">iOS</string>
+    <string name="common_cancel">Отмена</string>
+    <string name="common_ok">Ок</string>
+    <string name="common_search_parameters">Параметры поиска</string>
+    <string name="common_resolution">Разрешение</string>
+    <string name="common_choose">Выбрать…</string>
+    <string name="common_rfid_put_card">Приложите RFID-чип к считывателю</string>
+    <string name="common_retry_request">Повторить</string>
+    <string name="common_not_defined">Не указан</string>
+    <string name="common_navigate">Перейти</string>
+
+    <!--    departments-->
     <string name="android">Android</string>
     <string name="ios">iOS</string>
     <string name="qa">Тестирование</string>
@@ -21,45 +31,44 @@
     <string name="service">Служебный</string>
     <string name="head">Разработка</string>
 
-    <string name="devicelist_toolbar_title">Выбор устройства</string>
-    <string name="search_parameters">Параметры поиска</string>
-    <string name="devicedetails_toolbar_title">Подробная информация</string>
-    <string name="details_factory_name">Заводское название</string>
-    <string name="details_nickname_title">Народное название</string>
-    <string name="details_os_title">Операционная система и версия</string>
-    <string name="details_shell_title">Оболочка</string>
-    <string name="details_resolution_title">Разрешение экрана</string>
-    <string name="details_type_title">Тип устройства</string>
-    <string name="details_comment_title">Комментарий</string>
-    <string name="details_take">ВЗЯТЬ</string>
-    <string name="details_take_as">ВЗЯТЬ КАК \n%s</string>
-    <string name="details_return">ВЕРНУТЬ</string>
-    <string name="details_return_as">ВЕРНУТЬ КАК \n%s</string>
-    <string name="common_empty">Ничего не найдено :(</string>
-    <string name="common_all">Все</string>
-    <string name="common_android">Android</string>
-    <string name="common_ios">iOS</string>
-    <string name="device_list_os_version">Версия ОС</string>
-    <string name="common_resolution">Разрешение</string>
-    <string name="common_choose">Выбрать…</string>
+    <!--    device list-->
+    <string name="device_list_toolbar_title">Выбор устройства</string>
     <string name="device_list_only_free">Только свободные</string>
     <string name="device_list_only_organization">Не показывать личные устройства</string>
     <string name="device_list_free">Свободен</string>
     <string name="device_list_busy">Занят. Арендатор - %s</string>
+    <string name="device_list_choose_value">Выберите значение</string>
+    <string name="device_list_os_version">Версия ОС</string>
+    <string name="device_list">Список устройств</string>
+
+    <!--    device details-->
+    <string name="device_details_toolbar_title">Подробная информация</string>
+    <string name="device_details_factory_name">Заводское название</string>
+    <string name="device_details_nickname_title">Народное название</string>
+    <string name="device_details_os_title">Операционная система и версия</string>
+    <string name="device_details_shell_title">Оболочка</string>
+    <string name="device_details_resolution_title">Разрешение экрана</string>
+    <string name="device_details_type_title">Тип устройства</string>
+    <string name="device_details_comment_title">Комментарий</string>
+    <string name="device_details_take_as">ВЗЯТЬ КАК \n%s</string>
+    <string name="device_details_return_as">ВЕРНУТЬ КАК \n%s</string>
     <string name="device_details_your_rent">Находится в Вашем пользовании</string>
     <string name="device_details_return">Вернуть</string>
     <string name="device_details_take">Взять</string>
+    <string name="device_details_take_device">Взять устройство</string>
+    <string name="device_details_current_user">Текущий пользователь</string>
+
+    <!--    settings-->
     <string name="settings_current_user">Текущий пользователь</string>
     <string name="settings_not_defined">Не выбран</string>
     <string name="settings_public_account">Общий аккаунт</string>
     <string name="settings_title">Настройки</string>
     <string name="settings_save">Сохранить</string>
     <string name="settings_current_token">Текущий токен</string>
+
+    <!--    user list-->
     <string name="user_list_choose_owner">Выбран пользователь: %s</string>
-    <string name="rfid_put_card">Приложите RFID-чип к считывателю</string>
-    <string name="common_cancel">Отмена</string>
-    <string name="device_details_current_user">Текущий пользователь</string>
-    <string name="common_not_defined">Не указан</string>
-    <string name="device_list_choose_value">Выберите значение</string>
-    <string name="common_ok">Ок</string>
+    <string name="user_list_toolbar_title">Выбор пользователя</string>
+    <string name="user_list_search_user">Поиск пользователя</string>
+    <string name="user_list_search_hint">Иванов Вася</string>
 </resources>

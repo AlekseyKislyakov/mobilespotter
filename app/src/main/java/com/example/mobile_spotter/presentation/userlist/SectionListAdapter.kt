@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_spotter.R
+import com.example.mobile_spotter.data.entities.ALL
 import com.example.mobile_spotter.data.entities.Section
 import com.example.mobile_spotter.data.entities.departmentPriority
 import kotlinx.android.synthetic.main.item_filter_with_stroke.view.*
@@ -16,10 +17,10 @@ class SectionListAdapter @Inject constructor() :
     val items = mutableListOf<Section>()
 
     var doOnSectionClicked: (Section) -> Unit = {
-        if(it.id == "all") {
+        if(it.id == ALL) {
             items.forEach { item -> item.isSelected = false }
         } else {
-            items.firstOrNull { it.id == "all" }?.isSelected = false
+            items.firstOrNull { it.id == ALL }?.isSelected = false
         }
         it.isSelected = !it.isSelected
         notifyDataSetChanged()
@@ -42,7 +43,6 @@ class SectionListAdapter @Inject constructor() :
     }
 
     fun setItems(newItems: List<Section>) {
-        items.add(Section("all", "Все", true))
         val filteredItems = newItems.toSet()
         departmentPriority.forEach { department ->
             filteredItems.forEach { section ->
@@ -51,6 +51,12 @@ class SectionListAdapter @Inject constructor() :
                 }
             }
         }
+        newItems.firstOrNull().let {
+            if(it?.id == ALL) {
+                items.add(0, newItems.first())
+            }
+        }
+
         notifyDataSetChanged()
         preselectSection()
     }

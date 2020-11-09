@@ -17,9 +17,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIcon="@drawable/ic_arrow_back_black"
             android:background="@color/white"
-            app:title="@string/devicedetails_toolbar_title" />
+            app:navigationIcon="@drawable/ic_arrow_back_black"
+            app:title="@string/device_details_toolbar_title" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="@string/details_factory_name"
+                        android:text="@string/device_details_factory_name"
                         app:layout_constraintBottom_toTopOf="@+id/textViewDeviceName"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -87,7 +87,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/details_nickname_title"
+                        android:text="@string/device_details_nickname_title"
                         app:layout_constraintBottom_toTopOf="@+id/textViewDeviceNickname"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -117,7 +117,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/details_os_title"
+                        android:text="@string/device_details_os_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -145,7 +145,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/details_shell_title"
+                        android:text="@string/device_details_shell_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -173,7 +173,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/details_resolution_title"
+                        android:text="@string/device_details_resolution_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -201,7 +201,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/details_type_title"
+                        android:text="@string/device_details_type_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -229,7 +229,7 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
-                        android:text="@string/details_comment_title"
+                        android:text="@string/device_details_comment_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
@@ -286,11 +286,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:visibility="gone"
-                        tools:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="@+id/textViewDeviceStatus"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/textViewDeviceStatus"
-                        app:srcCompat="@drawable/ic_telegram" />
+                        app:srcCompat="@drawable/ic_telegram"
+                        tools:visibility="visible" />
 
                     <LinearLayout
                         android:id="@+id/layoutPrivateActions"
@@ -314,10 +314,10 @@
                                 style="@style/ButtonGreen"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAllCaps="true"
                                 android:layout_gravity="center_horizontal|center_vertical"
                                 android:enabled="true"
-                                android:text="@string/details_take" />
+                                android:text="@string/device_details_take"
+                                android:textAllCaps="true" />
 
                             <ProgressBar
                                 android:id="@+id/progressBarTake"
@@ -341,11 +341,11 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/buttonReturnDevice"
                                 style="@style/ButtonRed"
-                                android:textAllCaps="true"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal|center_vertical"
-                                android:text="@string/details_return" />
+                                android:text="@string/device_details_return"
+                                android:textAllCaps="true" />
 
                             <ProgressBar
                                 android:id="@+id/progressBarReturn"
@@ -405,14 +405,14 @@
                                 style="@style/ButtonGreen"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textAllCaps="true"
+                                android:layout_gravity="center_horizontal|center_vertical"
                                 android:layout_marginStart="16dp"
                                 android:layout_marginTop="8dp"
                                 android:layout_marginEnd="16dp"
                                 android:layout_marginBottom="8dp"
-                                android:layout_gravity="center_horizontal|center_vertical"
                                 android:enabled="true"
-                                android:text="@string/details_take" />
+                                android:text="@string/device_details_take"
+                                android:textAllCaps="true" />
 
                             <ProgressBar
                                 android:id="@+id/progressBarTakeGeneral"
@@ -432,15 +432,15 @@
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/buttonReturnDeviceGeneral"
                                 style="@style/ButtonRed"
-                                android:textAllCaps="true"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal|center_vertical"
                                 android:layout_marginStart="16dp"
                                 android:layout_marginTop="8dp"
                                 android:layout_marginEnd="16dp"
                                 android:layout_marginBottom="8dp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal|center_vertical"
-                                android:text="@string/details_return" />
+                                android:text="@string/device_details_return"
+                                android:textAllCaps="true" />
 
                             <ProgressBar
                                 android:id="@+id/progressBarReturnGeneral"
@@ -485,7 +485,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:text="@string/retry_request"
+        android:text="@string/common_retry_request"
         android:textAllCaps="false"
         android:visibility="gone"
         tools:visibility="visible" />
