@@ -9,6 +9,7 @@ import com.example.mobile_spotter.data.entities.OS_ALL
 import com.example.mobile_spotter.data.entities.OS_ANDROID
 import com.example.mobile_spotter.data.entities.OS_IOS
 import kotlinx.android.synthetic.main.item_list_string_checkbox.view.*
+import java.util.*
 import javax.inject.Inject
 
 class CheckBoxListAdapter @Inject constructor() :
@@ -53,8 +54,8 @@ class CheckBoxListAdapter @Inject constructor() :
                     selectedSet.addAll(selected)
                 }
                 else -> {
-                    itemSet.addAll(list.filter { it.toLowerCase().contains(type) })
-                    selectedSet.addAll(selected.filter { it.toLowerCase().contains(type) })
+                    itemSet.addAll(list.filter { it.toLowerCase(Locale.getDefault()).contains(type) })
+                    selectedSet.addAll(selected.filter { it.toLowerCase(Locale.ROOT).contains(type) })
                 }
             }
         }

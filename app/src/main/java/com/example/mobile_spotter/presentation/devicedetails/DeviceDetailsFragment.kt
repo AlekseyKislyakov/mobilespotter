@@ -12,7 +12,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_spotter.R
+import com.example.mobile_spotter.data.entities.ANDROID
 import com.example.mobile_spotter.data.entities.Device
+import com.example.mobile_spotter.data.entities.OS_ANDROID
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
@@ -57,8 +59,8 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             handleTakeDeviceState(it.state)
             it.doOnSuccess {
                 AlertDialog.Builder(requireContext())
-                        .setTitle("Устройство успешно взято")
-                        .setPositiveButton("Ok", null)
+                        .setTitle(getString(R.string.device_details_taken))
+                        .setPositiveButton(getString(R.string.common_ok), null)
                         .setOnDismissListener {
                             makeDevicesRequest()
                         }
@@ -69,8 +71,8 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             handleReturnDeviceState(it.state)
             it.doOnSuccess {
                 AlertDialog.Builder(requireContext())
-                        .setTitle("Устройство успешно сдано")
-                        .setPositiveButton("Ok", null)
+                        .setTitle(getString(R.string.device_details_returned))
+                        .setPositiveButton(getString(R.string.common_ok), null)
                         .setOnDismissListener {
                             makeDevicesRequest()
                         }
@@ -204,7 +206,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
         deviceInfo = deviceList.firstOrNull { deviceId == it.id.toString() }
         deviceInfo?.let { deviceInfo ->
             //required fields
-            if (deviceInfo.osType.toLowerCase() == "android") {
+            if (deviceInfo.osType.toLowerCase() == OS_ANDROID) {
                 imageViewDeviceAvatar.setImageResource(R.drawable.ic_android_robot)
             } else {
                 imageViewDeviceAvatar.setImageResource(R.drawable.ic_apple_logo_grey)
@@ -261,7 +263,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
             // check owner and create listener to open telegram
             if(deviceInfo.ownerId == 0 || deviceInfo.ownerId == -1) {
-                textViewDeviceStatus.text = "Свободен"
+                textViewDeviceStatus.text = getString(R.string.device_details_free)
                 buttonTakeDevice.isEnabled = true
                 buttonTakeDeviceGeneral.isEnabled = true
                 textViewDeviceStatus.setTextColor(
@@ -319,7 +321,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonReturnDevice.isEnabled = false
                 buttonTakeDeviceGeneral.isEnabled = false
                 buttonReturnDeviceGeneral.isEnabled = false
-                showActionSnackbar("Пользователь не указан") {
+                showActionSnackbar(getString(R.string.device_details_user_not_defined)) {
                     findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment())
                 }
             }

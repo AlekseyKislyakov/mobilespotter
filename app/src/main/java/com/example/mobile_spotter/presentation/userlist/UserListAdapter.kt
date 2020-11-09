@@ -26,8 +26,6 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
     private val allUsers = mutableListOf<User>()
     private val items = mutableListOf<UserEntity>()
 
-    private val sectionList = mutableListOf<Section>()
-
     var onUserClickListener: (User) -> Unit = {}
     var onEmptyListAction: (Boolean) -> Unit = {}
 

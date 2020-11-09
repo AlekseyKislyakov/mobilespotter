@@ -70,7 +70,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
         buttonApplyToken.setOnClickListener {
             viewModel.token = editTextToken.text.toString()
-            showSnackbar("Токен сохранен!")
+            showSnackbar(getString(R.string.settings_token_saved))
         }
 
     }

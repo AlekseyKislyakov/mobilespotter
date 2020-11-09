@@ -5,7 +5,6 @@ import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.view.KeyEvent.KEYCODE_ENTER
 import android.view.LayoutInflater
-import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -60,7 +59,7 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
         fab?.isVisible = showFloatingActionButton
         fab?.setOnClickListener {
-            createChooseResolutionDialog()?.show()
+            createRFIDDialog()?.show()
         }
     }
 
@@ -82,7 +81,7 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
         }
     }
 
-    private fun createChooseResolutionDialog(): Dialog? {
+    private fun createRFIDDialog(): Dialog? {
         activity?.let { context ->
             if (readRfidCardDialog == null) {
                 val rfidDialogView = LayoutInflater.from(context)

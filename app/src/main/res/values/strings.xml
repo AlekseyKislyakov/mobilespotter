@@ -57,6 +57,10 @@
     <string name="device_details_take">Взять</string>
     <string name="device_details_take_device">Взять устройство</string>
     <string name="device_details_current_user">Текущий пользователь</string>
+    <string name="device_details_taken">Устройство успешно взято</string>
+    <string name="device_details_returned">Устройство успешно сдано</string>
+    <string name="device_details_free">Свободен</string>
+    <string name="device_details_user_not_defined">Пользователь не указан</string>
 
     <!--    settings-->
     <string name="settings_current_user">Текущий пользователь</string>
@@ -65,10 +69,12 @@
     <string name="settings_title">Настройки</string>
     <string name="settings_save">Сохранить</string>
     <string name="settings_current_token">Текущий токен</string>
+    <string name="settings_token_saved">Токен сохранен!</string>
 
     <!--    user list-->
     <string name="user_list_choose_owner">Выбран пользователь: %s</string>
     <string name="user_list_toolbar_title">Выбор пользователя</string>
     <string name="user_list_search_user">Поиск пользователя</string>
     <string name="user_list_search_hint">Иванов Вася</string>
+
 </resources>

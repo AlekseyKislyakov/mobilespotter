@@ -111,7 +111,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
             textViewDeviceName.text = data.device.detailedName()
             textViewVersion.text = data.device.fullVersion()
 
-            if (data.device.osType.toLowerCase() == OS_ANDROID) {
+            if (data.device.osType.toLowerCase(Locale.getDefault()) == OS_ANDROID) {
                 imageViewDeviceAvatar.setImageResource(R.drawable.ic_android_robot)
             } else {
                 imageViewDeviceAvatar.setImageResource(R.drawable.ic_apple_logo_grey)
