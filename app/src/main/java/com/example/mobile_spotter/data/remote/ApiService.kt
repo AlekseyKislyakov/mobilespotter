@@ -11,10 +11,10 @@ interface ApiService {
 
     // TODO remove token
     @GET("users")
-    suspend fun getAllUsers(@Query("token") token: String) : UserList
+    suspend fun getAllUsers(@Query("token") token: String): UserList
 
     @GET("http://location.handh.ru:8877/device?token=test")
-    suspend fun getAllDevices() : DeviceList
+    suspend fun getAllDevices(): DeviceList
 
     @POST("http://location.handh.ru:8877/owner?token=test")
     suspend fun editDeviceStatus(@Body editDevice: EditDeviceRequest)

@@ -62,18 +62,6 @@ fun <T> progressive(block: suspend () -> Try<T>): Flow<LongOperation<T>> {
     }
 }
 
-fun <T> progressiveMultiple(list: List<suspend () -> Try<T>>): Flow<LongOperation<T>> {
-    return flow {
-        emit(InProgress<T>())
-
-        list.forEach {
-            it.invoke()
-        }
-
-        emit(Finished(list.last().invoke()))
-    }
-}
-
 sealed class LongOperation<T> {
     abstract val state: OpState
 

@@ -17,7 +17,7 @@ class SectionListAdapter @Inject constructor() :
     val items = mutableListOf<Section>()
 
     var doOnSectionClicked: (Section) -> Unit = {
-        if(it.id == ALL) {
+        if (it.id == ALL) {
             items.forEach { item -> item.isSelected = false }
         } else {
             items.firstOrNull { it.id == ALL }?.isSelected = false
@@ -46,13 +46,13 @@ class SectionListAdapter @Inject constructor() :
         val filteredItems = newItems.toSet()
         departmentPriority.forEach { department ->
             filteredItems.forEach { section ->
-                if(department.toString() == section.id) {
+                if (department.toString() == section.id) {
                     items.add(section)
                 }
             }
         }
         newItems.firstOrNull().let {
-            if(it?.id == ALL) {
+            if (it?.id == ALL) {
                 items.add(0, newItems.first())
             }
         }

@@ -17,7 +17,7 @@ object PreferencesModule {
 
     @Provides
     @Singleton
-    fun providePreferences(application: Application) : PreferencesStorage {
+    fun providePreferences(application: Application): PreferencesStorage {
         return PreferencesStorage(application)
     }
 

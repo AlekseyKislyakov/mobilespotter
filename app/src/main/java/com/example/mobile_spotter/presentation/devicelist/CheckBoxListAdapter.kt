@@ -13,7 +13,7 @@ import java.util.*
 import javax.inject.Inject
 
 class CheckBoxListAdapter @Inject constructor() :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var itemSet = mutableSetOf<String>()
     var selectedSet = mutableSetOf<String>()
@@ -22,15 +22,13 @@ class CheckBoxListAdapter @Inject constructor() :
         private const val DEFAULT_TYPE = 0
     }
 
-    var onClickListener: (String) -> Unit = {}
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StringCheckboxViewHolder {
         return StringCheckboxViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_list_string_checkbox,
-                parent,
-                false
-            )
+                LayoutInflater.from(parent.context).inflate(
+                        R.layout.item_list_string_checkbox,
+                        parent,
+                        false
+                )
         )
     }
 
@@ -45,10 +43,10 @@ class CheckBoxListAdapter @Inject constructor() :
     }
 
     fun replaceItems(list: List<String>, selected: List<String>, type: String? = null) {
-        if(type != null) {
+        if (type != null) {
             itemSet.clear()
             selectedSet.clear()
-            when(type) {
+            when (type) {
                 OS_ALL -> {
                     itemSet.addAll(list)
                     selectedSet.addAll(selected)
@@ -68,7 +66,7 @@ class CheckBoxListAdapter @Inject constructor() :
             checkBoxListItem.isChecked = selectedSet.contains(item)
 
             checkBoxListItem.setOnCheckedChangeListener { buttonView, isChecked ->
-                if(isChecked) {
+                if (isChecked) {
                     selectedSet.add(item)
                 } else {
                     selectedSet.remove(item)

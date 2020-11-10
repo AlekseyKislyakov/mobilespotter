@@ -35,10 +35,9 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
     private val viewModel by viewModels<DeviceDetailsViewModel>()
 
-    private var refreshFilters = false
     private var deviceId: String? = null
 
-    val args: DeviceDetailsFragmentArgs by navArgs()
+    private val args: DeviceDetailsFragmentArgs by navArgs()
 
     private var deviceInfo: Device? = null
 
@@ -47,23 +46,23 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
     override fun observeOperations() {
         observe(viewModel.getUsersOperation) {
             handleGetDevicesState(
-                combineStates(
-                    listOf(
-                        it.state,
-                        viewModel.getDevicesOperation.value?.state
+                    combineStates(
+                            listOf(
+                                    it.state,
+                                    viewModel.getDevicesOperation.value?.state
+                            )
                     )
-                )
             )
         }
 
         observe(viewModel.getDevicesOperation) {
             handleGetDevicesState(
-                combineStates(
-                    listOf(
-                        it.state,
-                        viewModel.getUsersOperation.value?.state
+                    combineStates(
+                            listOf(
+                                    it.state,
+                                    viewModel.getUsersOperation.value?.state
+                            )
                     )
-                )
             )
         }
 
@@ -71,39 +70,39 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             handleTakeDeviceState(it.state)
             it.doOnSuccess {
                 AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.device_details_taken))
-                    .setPositiveButton(getString(R.string.common_ok), null)
-                    .setOnDismissListener {
-                        makeDevicesRequest()
-                    }
-                    .show()
+                        .setTitle(getString(R.string.device_details_taken))
+                        .setPositiveButton(getString(R.string.common_ok), null)
+                        .setOnDismissListener {
+                            makeDevicesRequest()
+                        }
+                        .show()
             }
         }
         observe(viewModel.returnDeviceLiveData) {
             handleReturnDeviceState(it.state)
             it.doOnSuccess {
                 AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.device_details_returned))
-                    .setPositiveButton(getString(R.string.common_ok), null)
-                    .setOnDismissListener {
-                        makeDevicesRequest()
-                    }
-                    .show()
+                        .setTitle(getString(R.string.device_details_returned))
+                        .setPositiveButton(getString(R.string.common_ok), null)
+                        .setOnDismissListener {
+                            makeDevicesRequest()
+                        }
+                        .show()
             }
         }
         observe(viewModel.userListLiveData) {
-            if(viewModel.deviceListLiveData.value != null) {
+            if (viewModel.deviceListLiveData.value != null) {
                 handleInfo(
-                    it,
-                    viewModel.deviceListLiveData.value ?: emptyList()
+                        it,
+                        viewModel.deviceListLiveData.value ?: emptyList()
                 )
             }
         }
         observe(viewModel.deviceListLiveData) {
-            if(viewModel.userListLiveData.value != null) {
+            if (viewModel.userListLiveData.value != null) {
                 handleInfo(
-                    viewModel.userListLiveData.value ?: emptyList(),
-                    it
+                        viewModel.userListLiveData.value ?: emptyList(),
+                        it
                 )
             }
         }
@@ -286,9 +285,9 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             currentUser?.let {
                 textViewUserName.text = it.fullName()
                 buttonTakeDeviceGeneral.text =
-                    getString(R.string.device_details_take_as, it.fullName())
+                        getString(R.string.device_details_take_as, it.fullName())
                 buttonReturnDeviceGeneral.text =
-                    getString(R.string.device_details_return_as, it.fullName())
+                        getString(R.string.device_details_return_as, it.fullName())
             } ?: run {
                 textViewUserName.text = getString(R.string.common_not_defined)
                 buttonTakeDeviceGeneral.text = getString(R.string.device_details_take)
@@ -305,11 +304,11 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonTakeDevice.isEnabled = true
                 buttonTakeDeviceGeneral.isEnabled = true
                 textViewDeviceStatus.setTextColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.soft_green,
-                        null
-                    )
+                        ResourcesCompat.getColor(
+                                resources,
+                                R.color.soft_green,
+                                null
+                        )
                 )
                 imageViewTelegramIcon.isVisible = false
                 textViewDeviceStatus.isClickable = false
@@ -328,7 +327,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 } else {
                     owner?.let { owner ->
                         textViewDeviceStatus.text =
-                            getString(R.string.device_list_busy, owner.fullName())
+                                getString(R.string.device_list_busy, owner.fullName())
                         imageViewTelegramIcon.isVisible = true
                         textViewDeviceStatus.isClickable = true
                         buttonReturnDevice.isEnabled = false
@@ -336,8 +335,8 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
                         textViewDeviceStatus.setOnClickListener {
                             val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("http://www.t.me/${owner.telegram}")
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("http://www.t.me/${owner.telegram}")
                             )
                             try {
                                 requireContext().startActivity(intent)
@@ -350,11 +349,11 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 }
 
                 textViewDeviceStatus.setTextColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.soft_red,
-                        null
-                    )
+                        ResourcesCompat.getColor(
+                                resources,
+                                R.color.soft_red,
+                                null
+                        )
                 )
             }
 

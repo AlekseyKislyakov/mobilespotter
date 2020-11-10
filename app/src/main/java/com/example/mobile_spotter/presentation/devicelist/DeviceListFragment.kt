@@ -112,9 +112,9 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         }
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                viewModel.setQuery(it)
-            }
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    viewModel.setQuery(it)
+                }
     }
 
     override fun observeOperations() {
@@ -224,15 +224,15 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         radioButtonIOS.isChecked = filter.os == OS_IOS
 
         resolutionListAdapter.replaceItems(
-            filter.resolutionSet.toList(),
-            filter.selectedResolutionSet.toList(),
-            filter.os
+                filter.resolutionSet.toList(),
+                filter.selectedResolutionSet.toList(),
+                filter.os
         )
 
         versionListAdapter.replaceItems(
-            filter.versionSet.toList(),
-            filter.selectedVersionSet.toList(),
-            filter.os
+                filter.versionSet.toList(),
+                filter.selectedVersionSet.toList(),
+                filter.os
         )
 
         deviceListAdapter.applyFilter(filter, viewModel.queryLiveData.value ?: "")
@@ -250,11 +250,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         activity?.let { context ->
             if (chooseResolutionDialog == null) {
                 val chooseConverterView = LayoutInflater.from(context)
-                    .inflate(R.layout.view_string_picker, null)
+                        .inflate(R.layout.view_string_picker, null)
 
                 with(chooseConverterView) {
                     resolutionListAdapter.selectedSet =
-                        viewModel.filterParameters.selectedResolutionSet
+                            viewModel.filterParameters.selectedResolutionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -282,11 +282,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         activity?.let { context ->
             if (chooseVersionDialog == null) {
                 val chooseVersionView = LayoutInflater.from(context)
-                    .inflate(R.layout.view_string_picker, null)
+                        .inflate(R.layout.view_string_picker, null)
 
                 with(chooseVersionView) {
                     versionListAdapter.selectedSet =
-                        viewModel.filterParameters.selectedVersionSet
+                            viewModel.filterParameters.selectedVersionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -297,7 +297,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                         viewModel.setOsList(versionListAdapter.selectedSet)
                         chooseVersionDialog?.dismiss()
                     }
-                    
+
                     chooseVersionDialog = Dialog(context, R.style.DialogTheme).apply {
                         setCancelable(true)
                         setCanceledOnTouchOutside(true)

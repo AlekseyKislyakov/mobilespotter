@@ -12,27 +12,27 @@ object ApiServiceFactory {
 
     private const val TIMEOUT_SECONDS = 60L
 
-    fun newInstance(context: Context) : ApiService {
+    fun newInstance(context: Context): ApiService {
 
         val okHttpClient = okHttpClient(context)
 
         val retrofit = Retrofit.Builder()
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .baseUrl(ENDPOINT)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+                .addCallAdapterFactory(CoroutineCallAdapterFactory())
+                .baseUrl(ENDPOINT)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build()
 
         return retrofit.create(ApiService::class.java)
     }
 
-    private fun okHttpClient(context: Context) : OkHttpClient {
+    private fun okHttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(ChuckerInterceptor(context))
-            .callTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .build()
+                .addInterceptor(ChuckerInterceptor(context))
+                .callTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build()
     }
 
 }

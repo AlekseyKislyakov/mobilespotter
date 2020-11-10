@@ -69,7 +69,11 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
                 .filter { filter.selectedVersionSet.contains(it.device.detailedVersion()) }
                 .filter { !filter.onlyAvailable || it.owner == null }
                 .filter { !filter.nonPrivate || !it.device.private }.toList()
-                .filter { it.device.name.containsNoCase(query) || it.device.nickname.containsNoCase(query) })
+                .filter {
+                    it.device.name.containsNoCase(query) || it.device.nickname.containsNoCase(
+                            query
+                    )
+                })
 
         if (filteredDevices.isEmpty() && deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(true)

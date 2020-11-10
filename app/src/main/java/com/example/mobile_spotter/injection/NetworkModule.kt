@@ -15,6 +15,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(application: Application) : ApiService = ApiServiceFactory.newInstance(application)
+    fun provideApiService(application: Application): ApiService = ApiServiceFactory.newInstance(application)
 
 }

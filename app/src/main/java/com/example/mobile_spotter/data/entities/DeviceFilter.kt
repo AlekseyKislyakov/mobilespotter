@@ -1,8 +1,8 @@
 package com.example.mobile_spotter.data.entities
 
-val OS_ALL = "all"
-val OS_ANDROID = "android"
-val OS_IOS = "ios"
+const val OS_ALL = "all"
+const val OS_ANDROID = "android"
+const val OS_IOS = "ios"
 
 data class DeviceFilter(
     var os: String = "all",

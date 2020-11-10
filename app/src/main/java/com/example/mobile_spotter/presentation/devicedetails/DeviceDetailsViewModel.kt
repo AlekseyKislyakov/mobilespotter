@@ -32,10 +32,8 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     val takeDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
     val returnDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
 
-    val newUserId = MutableLiveData<String>()
-
-    val userList = mutableListOf<User>()
-    val deviceList = mutableListOf<Device>()
+    private val userList = mutableListOf<User>()
+    private val deviceList = mutableListOf<Device>()
 
     var originId: Int?
         get() = preferencesStorage.userId
@@ -53,7 +51,12 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     fun takeDevice() {
         viewModelScope.launch {
             progressive {
-                takeDeviceUseCase.execute(EditDeviceRequest(preferencesStorage.deviceId ?: 0, preferencesStorage.userId ?: 0))
+                takeDeviceUseCase.execute(
+                        EditDeviceRequest(
+                                preferencesStorage.deviceId ?: 0,
+                                preferencesStorage.userId ?: 0
+                        )
+                )
             }.collect {
                 takeDeviceLiveData.value = it
             }
@@ -71,7 +74,8 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     }
 
     fun handleCode(code: String): Any? {
-        val entity = userList.firstOrNull { it.rfid == code } ?: deviceList.firstOrNull { it.tokenUid == code }
+        val entity = userList.firstOrNull { it.rfid == code }
+                ?: deviceList.firstOrNull { it.tokenUid == code }
         entity?.let {
             when (it) {
                 is User -> {

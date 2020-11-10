@@ -27,7 +27,7 @@ val departmentPriority = listOf(
 )
 
 fun Int.recognize(): Int {
-    return when(this) {
+    return when (this) {
         ANDROID -> R.string.android
         IOS -> R.string.ios
         QA -> R.string.qa

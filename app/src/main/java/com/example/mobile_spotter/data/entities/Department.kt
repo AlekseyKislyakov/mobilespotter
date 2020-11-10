@@ -4,4 +4,4 @@ import com.brandongogetap.stickyheaders.exposed.StickyHeader
 
 data class Department(
     val department: Int
-): StickyHeader, UserEntity
+) : StickyHeader, UserEntity

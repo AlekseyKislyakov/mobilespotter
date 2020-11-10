@@ -85,7 +85,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private fun setUserData(userList: List<User>) {
         val currentUser = userList.firstOrNull { it.id == viewModel.getCurrentUserId() }
-        if(currentUser != null) {
+        if (currentUser != null) {
             textViewUserName.text = currentUser.fullName()
         } else {
             textViewUserName.text = getString(R.string.settings_not_defined)
