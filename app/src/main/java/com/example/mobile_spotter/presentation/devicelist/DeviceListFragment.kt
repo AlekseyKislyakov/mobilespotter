@@ -16,7 +16,9 @@ import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
+import com.example.mobile_spotter.utils.LongOperation
 import com.example.mobile_spotter.utils.OpState
+import com.example.mobile_spotter.utils.combineStates
 import com.jakewharton.rxbinding4.appcompat.itemClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -117,14 +119,14 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     override fun observeOperations() {
         observe(viewModel.getUsersOperation) {
-            handleGetDevicesState(it.state)
+            handleGetDevicesState(combineStates(listOf(it.state, viewModel.getDevicesOperation.value?.state)))
             it.doOnSuccess { userInfo ->
                 handleInfo(userInfo, viewModel.deviceListLiveData.value ?: emptyList())
             }
         }
 
         observe(viewModel.getDevicesOperation) {
-            handleGetDevicesState(it.state)
+            handleGetDevicesState(combineStates(listOf(it.state, viewModel.getUsersOperation.value?.state)))
         }
 
         observe(viewModel.queryLiveData) { query ->

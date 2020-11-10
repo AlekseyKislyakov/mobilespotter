@@ -47,6 +47,7 @@ sealed class Try<T> {
 class Success<T>(val result: T) : Try<T>() {
     override val state = OpState.SUCCESS
 }
+
 class Failure<T>(val throwable: Throwable) : Try<T>() {
     override val state = OpState.FAILURE
 }
@@ -58,6 +59,18 @@ fun <T> progressive(block: suspend () -> Try<T>): Flow<LongOperation<T>> {
         emit(InProgress<T>())
         val result = Finished(block.invoke())
         emit(result)
+    }
+}
+
+fun <T> progressiveMultiple(list: List<suspend () -> Try<T>>): Flow<LongOperation<T>> {
+    return flow {
+        emit(InProgress<T>())
+
+        list.forEach {
+            it.invoke()
+        }
+
+        emit(Finished(list.last().invoke()))
     }
 }
 
@@ -86,6 +99,7 @@ sealed class LongOperation<T> {
 class InProgress<T> : LongOperation<T>() {
     override val state = OpState.LOADING
 }
+
 class Finished<T>(val result: Try<T>) : LongOperation<T>() {
     override val state = result.state
 }

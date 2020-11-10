@@ -12,9 +12,11 @@ import com.example.mobile_spotter.domain.usecase.GetUsersUseCase
 import com.example.mobile_spotter.ext.detailedResolution
 import com.example.mobile_spotter.ext.detailedVersion
 import com.example.mobile_spotter.presentation.base.BaseViewModel
-import com.example.mobile_spotter.utils.LongOperation
-import com.example.mobile_spotter.utils.progressive
+import com.example.mobile_spotter.utils.*
+import com.example.mobile_spotter.utils.Failure
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class DeviceListViewModel @ViewModelInject constructor(
@@ -114,12 +116,12 @@ class DeviceListViewModel @ViewModelInject constructor(
             progressive {
                 getDevicesUseCase.execute()
             }.collect {
-                getDevicesOperation.value = it
+                getDevicesOperation.postValue(it)
                 it.doOnSuccess {
                     deviceList.clear()
                     deviceList.addAll(it)
 
-                    deviceListLiveData.value = it
+                    deviceListLiveData.postValue(it)
                     makeUsersRequest()
                 }
             }

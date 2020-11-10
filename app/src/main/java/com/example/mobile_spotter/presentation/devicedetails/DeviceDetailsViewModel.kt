@@ -27,6 +27,7 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     val getUsersOperation = MutableLiveData<LongOperation<UserList>>()
 
     val deviceListLiveData = MutableLiveData<List<Device>>()
+    val userListLiveData = MutableLiveData<List<User>>()
 
     val takeDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
     val returnDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
@@ -85,6 +86,7 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     }
 
     private fun makeDevicesRequest() {
+        makeUsersRequest()
         viewModelScope.launch {
             progressive {
                 getDevicesUseCase.execute()
@@ -93,8 +95,7 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
                 it.doOnSuccess {
                     deviceList.clear()
                     deviceList.addAll(it)
-                    deviceListLiveData.value = it
-                    makeUsersRequest()
+                    deviceListLiveData.postValue(it)
                 }
             }
         }
@@ -109,6 +110,7 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
                 it.doOnSuccess {
                     userList.clear()
                     userList.addAll(it)
+                    userListLiveData.postValue(it)
                 }
             }
         }
