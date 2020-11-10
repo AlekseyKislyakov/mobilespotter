@@ -8,14 +8,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
-import com.example.mobile_spotter.data.entities.ALL
-import com.example.mobile_spotter.data.entities.Section
-import com.example.mobile_spotter.data.entities.UserList
-import com.example.mobile_spotter.data.entities.recognize
+import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
+import com.example.mobile_spotter.presentation.devicelist.DeviceListFragmentDirections
 import com.example.mobile_spotter.utils.OpState
 import com.jakewharton.rxbinding4.appcompat.navigationClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
@@ -107,7 +105,12 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     }
 
     override fun onCodeRecognized(code: String) {
-        showSnackbar(code)
+        val entity = viewModel.handleCode(code)
+        if (entity != null && entity is User) {
+            showSnackbar(getString(R.string.user_list_choose_owner, entity.fullName()))
+        } else {
+            showSnackbar("Неизвестная карта")
+        }
     }
 
     private fun handleGetUsersState(state: OpState) {

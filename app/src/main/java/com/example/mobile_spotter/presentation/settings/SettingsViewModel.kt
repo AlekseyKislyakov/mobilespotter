@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.DeviceList
+import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.data.entities.UserList
 import com.example.mobile_spotter.data.entities.request.EditDeviceRequest
 import com.example.mobile_spotter.data.preferences.PreferencesStorage

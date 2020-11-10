@@ -1,6 +1,7 @@
 package com.example.mobile_spotter.presentation.base
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.graphics.drawable.TransitionDrawable
 import android.os.Bundle
 import android.view.KeyEvent.KEYCODE_ENTER
@@ -9,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import com.example.mobile_spotter.MainActivity
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.ext.KeyboardShowListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,10 +22,12 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
 
     private var readRfidCardDialog: Dialog? = null
 
+    private var isHardwareKeyboardAvailable = true
+
     var initialized = false
 
     open val showFloatingActionButton: Boolean
-        get() = (parentFragment as? BaseFragment)?.showFloatingActionButton ?: false
+        get() = (parentFragment as? BaseFragment)?.showFloatingActionButton == true
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -32,7 +36,9 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
         onSetupLayout(savedInstanceState)
         onBindViewModel()
 
-        if(!initialized) {
+        isHardwareKeyboardAvailable = activity?.resources?.configuration?.keyboard != Configuration.KEYBOARD_NOKEYS
+
+        if (!initialized) {
             observeOperations()
             initialized = true
         }
@@ -49,7 +55,7 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
     abstract fun onSetupLayout(savedInstanceState: Bundle?)
 
     /**
-     * livedata/viewmodel operations handling у ViewModel
+     * livedata/viewmodel operations handling
      */
     abstract fun onBindViewModel()
 
@@ -57,7 +63,7 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
 
     private fun setupRFIDButtonVisibility() {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.isVisible = showFloatingActionButton
+        fab?.isVisible = showFloatingActionButton && isHardwareKeyboardAvailable
         fab?.setOnClickListener {
             createRFIDDialog()?.show()
         }
@@ -94,7 +100,7 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
                             onCodeRecognized(editTextRfidListener.text.toString().trim())
                             editTextRfidListener.setText("")
                             val anim = (imageViewRfidIcon.drawable as TransitionDrawable)
-                                    anim.startTransition(100)
+                            anim.startTransition(100)
 
                             GlobalScope.launch {
                                 delay(500)

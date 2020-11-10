@@ -26,7 +26,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     private val viewModel by viewModels<SettingsViewModel>()
 
-    override val showFloatingActionButton = true
+    override val showFloatingActionButton = false
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         layoutUserName.setOnClickListener {

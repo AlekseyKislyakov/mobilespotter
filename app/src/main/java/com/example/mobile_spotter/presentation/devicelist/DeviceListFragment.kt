@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.data.entities.OS_ALL
+import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
@@ -47,8 +48,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     private var chooseResolutionDialog: Dialog? = null
     private var chooseVersionDialog: Dialog? = null
-
-    private var refreshFilters = false
 
     override val showFloatingActionButton = true
 
@@ -89,7 +88,14 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     override fun onCodeRecognized(code: String) {
-        showSnackbar(code)
+        val entity = viewModel.handleCode(code)
+        if (entity != null && entity is User) {
+            showSnackbar(getString(R.string.user_list_choose_owner, entity.fullName()))
+        } else if (entity is Device) {
+            findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(entity.id.toString()))
+        } else {
+            showSnackbar(getString(R.string.common_card))
+        }
     }
 
     override fun onBindViewModel() {
@@ -121,18 +127,14 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             handleGetDevicesState(it.state)
         }
 
-        observe(viewModel.filterParameters) {
-            refreshFilters(it)
-        }
-
         observe(viewModel.queryLiveData) { query ->
-            viewModel.filterParameters.value?.let { filter ->
+            viewModel.filterParameters.let { filter ->
                 deviceListAdapter.applyFilter(filter, query)
             }
         }
 
         observe(viewModel.refreshFilters) {
-            refreshFilters = true
+            refreshFilters(viewModel.filterParameters)
         }
     }
 
@@ -232,8 +234,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         )
 
         deviceListAdapter.applyFilter(filter, viewModel.queryLiveData.value ?: "")
-
-        refreshFilters = false
     }
 
     private fun makeDevicesRequest() {
@@ -252,7 +252,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
                 with(chooseConverterView) {
                     resolutionListAdapter.selectedSet =
-                        viewModel.filterParameters.value?.selectedResolutionSet ?: mutableSetOf()
+                        viewModel.filterParameters.selectedResolutionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -284,7 +284,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
                 with(chooseVersionView) {
                     versionListAdapter.selectedSet =
-                        viewModel.filterParameters.value?.selectedVersionSet ?: mutableSetOf()
+                        viewModel.filterParameters.selectedVersionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false

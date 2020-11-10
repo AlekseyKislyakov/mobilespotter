@@ -41,7 +41,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
 
     private var deviceInfo: Device? = null
 
-    override val showFloatingActionButton = false
+    override val showFloatingActionButton = true
 
     override fun observeOperations() {
         observe(viewModel.getUsersOperation) {
@@ -122,7 +122,15 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
     }
 
     override fun onCodeRecognized(code: String) {
-        showSnackbar(code)
+        val entity = viewModel.handleCode(code)
+        if (entity != null && entity is User) {
+            showSnackbar(getString(R.string.user_list_choose_owner, entity.fullName()))
+        } else if (entity is Device) {
+            deviceId = entity.id.toString()
+            makeDevicesRequest()
+        } else {
+            showSnackbar("Неизвестная карта")
+        }
     }
 
     override fun onKeyboardHeightChanged(value: Int) {
@@ -218,7 +226,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             textViewDeviceType.text = deviceInfo.type
 
             // optional fields
-            if(deviceInfo.nickname.isNotEmpty()) {
+            if (deviceInfo.nickname.isNotEmpty()) {
                 textViewDeviceNickname.text = deviceInfo.nickname
                 textViewDeviceNickname.isVisible = true
                 textViewDeviceNicknameTitle.isVisible = true
@@ -227,7 +235,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 textViewDeviceNicknameTitle.isGone = true
             }
 
-            if(deviceInfo.shell.isNotEmpty()) {
+            if (deviceInfo.shell.isNotEmpty()) {
                 textViewDeviceShell.text = deviceInfo.shell
                 textViewDeviceShell.isVisible = true
                 textViewDeviceShellTitle.isVisible = true
@@ -236,7 +244,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 textViewDeviceShellTitle.isGone = true
             }
 
-            if(deviceInfo.comment.isNotEmpty()) {
+            if (deviceInfo.comment.isNotEmpty()) {
                 textViewDeviceComment.text = deviceInfo.comment
                 textViewDeviceComment.isVisible = true
                 textViewDeviceCommentTitle.isVisible = true
@@ -262,16 +270,16 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             }
 
             // check owner and create listener to open telegram
-            if(deviceInfo.ownerId == 0 || deviceInfo.ownerId == -1) {
+            if (deviceInfo.ownerId == 0 || deviceInfo.ownerId == -1) {
                 textViewDeviceStatus.text = getString(R.string.device_details_free)
                 buttonTakeDevice.isEnabled = true
                 buttonTakeDeviceGeneral.isEnabled = true
                 textViewDeviceStatus.setTextColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.soft_green,
-                        null
-                    )
+                        ResourcesCompat.getColor(
+                                resources,
+                                R.color.soft_green,
+                                null
+                        )
                 )
                 imageViewTelegramIcon.isVisible = false
                 textViewDeviceStatus.isClickable = false
@@ -279,7 +287,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonReturnDeviceGeneral.isEnabled = false
             } else {
                 val owner = userList.firstOrNull { deviceInfo.ownerId == it.id }
-                if(owner?.id == viewModel.originId) {
+                if (owner?.id == viewModel.originId) {
                     textViewDeviceStatus.text = getString(R.string.device_details_your_rent)
                     imageViewTelegramIcon.isVisible = false
                     textViewDeviceStatus.isClickable = false
@@ -308,15 +316,15 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 }
 
                 textViewDeviceStatus.setTextColor(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.soft_red,
-                        null
-                    )
+                        ResourcesCompat.getColor(
+                                resources,
+                                R.color.soft_red,
+                                null
+                        )
                 )
             }
 
-            if(currentUser == null) {
+            if (currentUser == null) {
                 buttonTakeDevice.isEnabled = false
                 buttonReturnDevice.isEnabled = false
                 buttonTakeDeviceGeneral.isEnabled = false

@@ -3,6 +3,7 @@ package com.example.mobile_spotter.presentation.devicelist
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.data.preferences.PreferencesStorage
@@ -33,8 +34,11 @@ class DeviceListViewModel @ViewModelInject constructor(
 
     val deviceListLiveData = MutableLiveData<List<Device>>()
 
-    val filterParameters = MutableLiveData(DeviceFilter())
+    var filterParameters = DeviceFilter()
     var initialRequest = true
+
+    val userList = mutableListOf<User>()
+    val deviceList = mutableListOf<Device>()
 
     fun getDevices() {
         makeDevicesRequest()
@@ -54,28 +58,55 @@ class DeviceListViewModel @ViewModelInject constructor(
     }
 
     fun setOsType(type: String) {
+        filterParameters.apply {
+            os = type
+            selectedResolutionSet = resolutionSet.toMutableSet()
+            selectedVersionSet = versionSet.toMutableSet()
+        }
         refreshFilters.value = Unit
-        filterParameters.value = filterParameters.value?.copy(
-            os = type,
-            selectedResolutionSet = filterParameters.value?.resolutionSet ?: mutableSetOf(),
-            selectedVersionSet = filterParameters.value?.versionSet ?: mutableSetOf()
-        )
     }
 
     fun setOsList(versions: MutableSet<String>) {
-        filterParameters.value = filterParameters.value?.copy(selectedVersionSet = versions)
+        filterParameters.apply {
+            selectedVersionSet = versions
+        }
+        refreshFilters.value = Unit
     }
 
     fun setResolutionList(resolutions: MutableSet<String>) {
-        filterParameters.value = filterParameters.value?.copy(selectedResolutionSet = resolutions)
+        filterParameters.apply {
+            selectedResolutionSet = resolutions
+        }
+        refreshFilters.value = Unit
     }
 
     fun setPrivateType(isGeneral: Boolean) {
-        filterParameters.value = filterParameters.value?.copy(nonPrivate = isGeneral)
+        filterParameters.apply {
+            nonPrivate = isGeneral
+        }
+        refreshFilters.value = Unit
     }
 
     fun setFreeType(isAvailable: Boolean) {
-        filterParameters.value = filterParameters.value?.copy(onlyAvailable = isAvailable)
+        filterParameters.apply {
+            onlyAvailable = isAvailable
+        }
+        refreshFilters.value = Unit
+    }
+
+    fun handleCode(code: String): Any? {
+        val entity = userList.firstOrNull { it.rfid == code } ?: deviceList.firstOrNull { it.tokenUid == code }
+        entity?.let {
+            when (it) {
+                is User -> {
+                    preferencesStorage.userId = it.id
+                }
+                is Device -> {
+                    preferencesStorage.deviceId = it.id
+                }
+            }
+        }
+        return entity
     }
 
     private fun makeDevicesRequest() {
@@ -85,6 +116,9 @@ class DeviceListViewModel @ViewModelInject constructor(
             }.collect {
                 getDevicesOperation.value = it
                 it.doOnSuccess {
+                    deviceList.clear()
+                    deviceList.addAll(it)
+
                     deviceListLiveData.value = it
                     makeUsersRequest()
                 }
@@ -99,6 +133,9 @@ class DeviceListViewModel @ViewModelInject constructor(
             }.collect {
                 getUsersOperation.value = it
                 it.doOnSuccess {
+                    userList.clear()
+                    userList.addAll(it)
+
                     if (initialRequest) {
                         fillFilterValue()
                         initialRequest = false
@@ -109,14 +146,15 @@ class DeviceListViewModel @ViewModelInject constructor(
     }
 
     private fun fillFilterValue() {
-        filterParameters.value = DeviceFilter(
-            os = OS_ALL,
-            versionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet() ?: mutableSetOf(),
-            selectedVersionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet()
-                ?: mutableSetOf(),
-            resolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet() ?: mutableSetOf(),
-            selectedResolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet()
-                ?: mutableSetOf()
+        filterParameters = DeviceFilter(
+                os = OS_ALL,
+                versionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet() ?: mutableSetOf(),
+                selectedVersionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet()
+                        ?: mutableSetOf(),
+                resolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet() ?: mutableSetOf(),
+                selectedResolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet()
+                        ?: mutableSetOf()
         )
+        refreshFilters.value = Unit
     }
 }

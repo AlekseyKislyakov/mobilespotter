@@ -9,5 +9,6 @@ data class User(
     @SerializedName("Id") val id: Int,
     @SerializedName("LastName") val lastName: String,
     @SerializedName("Login") val login: String,
-    @SerializedName("TG") val telegram: String
+    @SerializedName("TG") val telegram: String,
+    @SerializedName("Rfid") val rfid: String
 ): UserEntity

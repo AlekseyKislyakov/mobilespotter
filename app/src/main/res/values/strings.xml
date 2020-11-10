@@ -76,5 +76,6 @@
     <string name="user_list_toolbar_title">Выбор пользователя</string>
     <string name="user_list_search_user">Поиск пользователя</string>
     <string name="user_list_search_hint">Иванов Вася</string>
+    <string name="common_card">Неизвестная карта</string>
 
 </resources>

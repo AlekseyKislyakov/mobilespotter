@@ -31,8 +31,17 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
     val takeDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
     val returnDeviceLiveData = MutableLiveData<LongOperation<Unit>>()
 
-    val originId: Int?
+    val newUserId = MutableLiveData<String>()
+
+    val userList = mutableListOf<User>()
+    val deviceList = mutableListOf<Device>()
+
+    var originId: Int?
         get() = preferencesStorage.userId
+        set(value) {
+            preferencesStorage.userId = value
+        }
+
     val isPublic: Boolean?
         get() = preferencesStorage.publicAccount
 
@@ -60,6 +69,21 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
         }
     }
 
+    fun handleCode(code: String): Any? {
+        val entity = userList.firstOrNull { it.rfid == code } ?: deviceList.firstOrNull { it.tokenUid == code }
+        entity?.let {
+            when (it) {
+                is User -> {
+                    originId = it.id
+                }
+                is Device -> {
+                    preferencesStorage.deviceId = it.id
+                }
+            }
+        }
+        return entity
+    }
+
     private fun makeDevicesRequest() {
         viewModelScope.launch {
             progressive {
@@ -67,6 +91,8 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
             }.collect {
                 getDevicesOperation.value = it
                 it.doOnSuccess {
+                    deviceList.clear()
+                    deviceList.addAll(it)
                     deviceListLiveData.value = it
                     makeUsersRequest()
                 }
@@ -80,6 +106,10 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
                 getUsersUseCase.execute()
             }.collect {
                 getUsersOperation.value = it
+                it.doOnSuccess {
+                    userList.clear()
+                    userList.addAll(it)
+                }
             }
         }
     }

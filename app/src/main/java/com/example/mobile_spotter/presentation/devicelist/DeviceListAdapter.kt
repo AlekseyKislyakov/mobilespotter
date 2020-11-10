@@ -32,8 +32,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
             DEVICE_VIEW_TYPE -> return DeviceViewHolder(
-                    inflater
-                            .inflate(R.layout.item_device_list, parent, false)
+                    inflater.inflate(R.layout.item_device_list, parent, false)
             )
         }
         throw IllegalStateException("Unknown view type: $viewType")
@@ -59,7 +58,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         currentFilter = filter
         currentQuery = query
 
-        if(deviceData.isNotEmpty()) {
+        if (deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(false)
         }
 
@@ -72,7 +71,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
                 .filter { !filter.nonPrivate || !it.device.private }.toList()
                 .filter { it.device.name.containsNoCase(query) || it.device.nickname.containsNoCase(query) })
 
-        if(filteredDevices.isEmpty() && deviceData.isNotEmpty()) {
+        if (filteredDevices.isEmpty() && deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(true)
         }
         notifyDataSetChanged()
@@ -128,7 +127,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
                 )
             } else {
                 textViewStatus.text =
-                    itemView.context.getString(R.string.device_list_busy, data.owner.fullName())
+                        itemView.context.getString(R.string.device_list_busy, data.owner.fullName())
                 textViewStatus.setTextColor(
                         ResourcesCompat.getColor(
                                 itemView.resources,

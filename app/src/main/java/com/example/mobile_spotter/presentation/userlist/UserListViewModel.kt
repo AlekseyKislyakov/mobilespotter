@@ -3,6 +3,7 @@ package com.example.mobile_spotter.presentation.userlist
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.User
 import com.example.mobile_spotter.data.entities.UserList
 import com.example.mobile_spotter.data.preferences.PreferencesStorage
@@ -22,6 +23,8 @@ class UserListViewModel @ViewModelInject constructor(
     val queryLiveData = MutableLiveData<String>()
     val applyUser = MutableLiveData<User>()
 
+    val userList = mutableListOf<User>()
+
     fun getUsers() {
         makeRequest()
     }
@@ -35,12 +38,24 @@ class UserListViewModel @ViewModelInject constructor(
         applyUser.value = user
     }
 
+    fun handleCode(code: String): Any? {
+        val entity = userList.firstOrNull { it.rfid == code }
+        entity?.let {
+            selectUser(it)
+        }
+        return entity
+    }
+
     private fun makeRequest() {
         viewModelScope.launch {
             progressive {
                 getUsersUseCase.execute()
             }.collect {
                 getUsersOperation.value = it
+                it.doOnSuccess {
+                    userList.clear()
+                    userList.addAll(it)
+                }
             }
         }
     }
