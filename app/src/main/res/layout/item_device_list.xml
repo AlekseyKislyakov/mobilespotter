@@ -2,8 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:elevation="6dp"
     app:cardCornerRadius="6dp">
 
@@ -21,10 +21,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            app:layout_constraintVertical_bias="0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0"
             app:srcCompat="@drawable/ic_android_robot" />
 
         <TextView
@@ -34,13 +34,13 @@
             android:layout_marginStart="16dp"
             android:textSize="17sp"
             android:textStyle="bold"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/textViewDeviceVersion"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
             app:layout_constraintTop_toTopOf="@+id/imageViewDeviceAvatar"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constrainedWidth="true"
             tools:text="Meizu Note 2" />
 
         <TextView

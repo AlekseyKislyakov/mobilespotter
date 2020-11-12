@@ -1,20 +1,28 @@
 package com.example.mobile_spotter.presentation.userlist
 
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
+import com.example.mobile_spotter.ext.dpToPx
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.presentation.devicelist.DeviceListFragmentDirections
+import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.HEADER_VIEW_TYPE
+import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.USER_VIEW_TYPE
+import com.example.mobile_spotter.utils.HolderDecorator
 import com.example.mobile_spotter.utils.OpState
+import com.example.mobile_spotter.utils.StickyHolderDecorator
 import com.jakewharton.rxbinding4.appcompat.navigationClicks
 import com.jakewharton.rxbinding4.appcompat.queryTextChanges
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +46,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
     @Inject
     lateinit var sectionListAdapter: SectionListAdapter
 
-    override val showFloatingActionButton = false
+    override val showFloatingActionButton = true
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         toolbar.inflateMenu(R.menu.menu_userlist)
@@ -50,8 +58,25 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
             makeUsersRequest()
         }
 
-        val stickyLayoutManager = StickyLayoutManager(context, userListAdapter)
-        recyclerViewUsers.layoutManager = stickyLayoutManager
+        val spanCount = resources.getInteger(R.integer.device_details_column_count)
+
+        if(spanCount == 1) {
+            recyclerViewUsers.layoutManager = StickyLayoutManager(context, userListAdapter)
+        } else {
+            val layoutManager = GridLayoutManager(context, spanCount)
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (userListAdapter.getItemViewType(position)) {
+                        HEADER_VIEW_TYPE -> spanCount
+                        USER_VIEW_TYPE -> 1
+                        else -> -1
+                    }
+                }
+            }
+            recyclerViewUsers.layoutManager = layoutManager
+            recyclerViewUsers.addItemDecoration(StickyHolderDecorator(8.dpToPx()))
+        }
+
         recyclerViewUsers.adapter = userListAdapter
 
         recyclerViewSectionFilters.adapter = sectionListAdapter

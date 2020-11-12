@@ -19,8 +19,8 @@ class UserListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerView.
 
     companion object {
 
-        private const val HEADER_VIEW_TYPE = 0
-        private const val USER_VIEW_TYPE = 1
+        const val HEADER_VIEW_TYPE = 0
+        const val USER_VIEW_TYPE = 1
     }
 
     private val allUsers = mutableListOf<User>()

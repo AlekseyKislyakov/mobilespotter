@@ -80,6 +80,7 @@ class DeviceDetailsViewModel @ViewModelInject constructor(
             when (it) {
                 is User -> {
                     originId = it.id
+                    makeDevicesRequest()
                 }
                 is Device -> {
                     preferencesStorage.deviceId = it.id
