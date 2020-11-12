@@ -10,9 +10,9 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import com.example.mobile_spotter.MainActivity
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.ext.KeyboardShowListener
+import com.example.mobile_spotter.ext.showSnackbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.view_rfid_dialog.view.*
 import kotlinx.coroutines.*
@@ -21,8 +21,6 @@ import kotlinx.coroutines.*
 abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), KeyboardShowListener {
 
     private var readRfidCardDialog: Dialog? = null
-
-    private var isHardwareKeyboardAvailable = true
 
     var initialized = false
 
@@ -35,8 +33,6 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
         setupRFIDButtonVisibility()
         onSetupLayout(savedInstanceState)
         onBindViewModel()
-
-        isHardwareKeyboardAvailable = activity?.resources?.configuration?.keyboard != Configuration.KEYBOARD_NOKEYS
 
         if (!initialized) {
             observeOperations()
@@ -63,10 +59,16 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
 
     private fun setupRFIDButtonVisibility() {
         val fab = activity?.findViewById<FloatingActionButton>(R.id.fab)
-        fab?.isVisible = showFloatingActionButton && isHardwareKeyboardAvailable
+        fab?.isVisible = showFloatingActionButton && checkKeyboardAvailability()
         fab?.setOnClickListener {
             createRFIDDialog()?.show()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        showSnackbar("keyboard " + newConfig.keyboard.toString())
+        setupRFIDButtonVisibility()
     }
 
     fun hideBottomNavigation() {
@@ -87,11 +89,15 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
         }
     }
 
+    private fun checkKeyboardAvailability(): Boolean {
+        return activity?.resources?.configuration?.keyboard == Configuration.KEYBOARD_QWERTY
+    }
+
     private fun createRFIDDialog(): Dialog? {
         activity?.let { context ->
             if (readRfidCardDialog == null) {
                 val rfidDialogView = LayoutInflater.from(context)
-                        .inflate(R.layout.view_rfid_dialog, null)
+                    .inflate(R.layout.view_rfid_dialog, null)
 
                 with(rfidDialogView) {
                     editTextRfidListener.requestFocus()

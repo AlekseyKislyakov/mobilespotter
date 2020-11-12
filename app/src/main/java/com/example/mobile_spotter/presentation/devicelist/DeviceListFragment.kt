@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.data.entities.OS_ALL
+import com.example.mobile_spotter.ext.dpToPx
 import com.example.mobile_spotter.ext.fullName
 import com.example.mobile_spotter.ext.observe
 import com.example.mobile_spotter.ext.showSnackbar
 import com.example.mobile_spotter.presentation.base.BaseFragment
+import com.example.mobile_spotter.utils.HolderDecorator
 import com.example.mobile_spotter.utils.LongOperation
 import com.example.mobile_spotter.utils.OpState
 import com.example.mobile_spotter.utils.combineStates
@@ -67,7 +69,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             makeDevicesRequest()
         }
 
-        recyclerViewDevices.layoutManager = LinearLayoutManager(context)
         recyclerViewDevices.adapter = deviceListAdapter
 
         layoutFiltering.setOnClickListener {
@@ -102,6 +103,8 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     override fun onBindViewModel() {
         makeDevicesRequest()
+
+        recyclerViewDevices.addItemDecoration(HolderDecorator(8.dpToPx()))
 
         deviceListAdapter.onClickListener = {
             viewModel.setDevice(it)

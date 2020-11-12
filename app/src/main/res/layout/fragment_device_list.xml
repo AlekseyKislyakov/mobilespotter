@@ -31,7 +31,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/extremely_light_gray">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -200,6 +201,8 @@
                 android:orientation="vertical"
                 android:overScrollMode="never"
                 android:visibility="invisible"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="@integer/device_details_column_count"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_device_list"
                 tools:visibility="visible" />
