@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
-import com.example.mobile_spotter.ext.dpToPx
-import com.example.mobile_spotter.ext.fullName
-import com.example.mobile_spotter.ext.observe
-import com.example.mobile_spotter.ext.showSnackbar
+import com.example.mobile_spotter.ext.*
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.presentation.devicelist.DeviceListFragmentDirections
 import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.HEADER_VIEW_TYPE
@@ -36,6 +33,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
+
+    val SINGLE_COLUMN = 1
 
     private val viewModel by viewModels<UserListViewModel>()
     private lateinit var searchView: SearchView
@@ -60,8 +59,9 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
         val spanCount = resources.getInteger(R.integer.device_details_column_count)
 
-        if(spanCount == 1) {
+        if(spanCount == SINGLE_COLUMN) {
             recyclerViewUsers.layoutManager = StickyLayoutManager(context, userListAdapter)
+            coordinatorLayout.setBackgroundColor(getColor((R.color.white)))
         } else {
             val layoutManager = GridLayoutManager(context, spanCount)
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
