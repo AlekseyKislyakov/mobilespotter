@@ -25,8 +25,11 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
     private var currentQuery = ""
     private var currentFilter = DeviceFilter()
 
+    var currentUserId = 0
+
     var onClickListener: (Device) -> Unit = {}
     var onItemSelected: (Device?) -> Unit = {}
+    var onItemUnselected: (Device?) -> Unit = {}
     var onEmptyListAction: (Boolean) -> Unit = {}
 
     var selectedCount = 0
@@ -72,12 +75,13 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
                 .filter { filter.selectedVersionSet.contains(it.device.detailedVersion()) }
                 .filter { !filter.onlyAvailable || it.owner == null }
                 .filter { !filter.nonPrivate || !it.device.private }.toList()
+                .filter { !filter.onlyMine || it.owner?.id == currentUserId }
                 .filter {
                     it.device.name.containsNoCase(query) || it.device.nickname.containsNoCase(
                             query
                     )
                 })
-
+        clearSelection()
         if (filteredDevices.isEmpty() && deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(true)
         }
@@ -104,6 +108,21 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         selectedCount = 0
         notifyDataSetChanged()
         onItemSelected.invoke(null)
+    }
+
+    fun getSelectedDevices(): List<FullDeviceInfo> {
+        return filteredDevices.filter { it.selected }
+    }
+
+    fun selectByCode(device: Device) {
+        filteredDevices.filter { it.device == device }.forEach {
+            if(!it.selected) {
+                it.selected = true
+                selectedCount++
+                onItemSelected.invoke(device)
+            }
+        }
+        notifyDataSetChanged()
     }
 
     private fun handleData() {
@@ -164,7 +183,6 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
             itemView.setOnClickListener {
                 if(selectedCount > 0) {
                     setSelection(data)
-                    onItemSelected.invoke(data.device)
                 } else {
                     onClickListener.invoke(data.device)
                 }
@@ -172,8 +190,6 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
 
             itemView.setOnLongClickListener {
                 setSelection(data)
-
-                onItemSelected.invoke(data.device)
                 true
             }
         }
@@ -181,8 +197,10 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         private fun setSelection(data: FullDeviceInfo) {
             if(!data.selected) {
                 selectedCount++
+                onItemSelected.invoke(data.device)
             } else {
                 selectedCount--
+                onItemUnselected.invoke(data.device)
             }
             data.selected = !data.selected
             notifyDataSetChanged()

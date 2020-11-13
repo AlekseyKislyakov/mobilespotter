@@ -1,31 +1,33 @@
 package com.example.mobile_spotter.presentation.devicelist
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.mobile_spotter.data.entities.*
+import com.example.mobile_spotter.data.entities.request.EditDeviceRequest
 import com.example.mobile_spotter.data.preferences.PreferencesStorage
 import com.example.mobile_spotter.domain.usecase.GetDevicesUseCase
 import com.example.mobile_spotter.domain.usecase.GetUsersUseCase
+import com.example.mobile_spotter.domain.usecase.ReturnDeviceUseCase
+import com.example.mobile_spotter.domain.usecase.TakeDeviceUseCase
 import com.example.mobile_spotter.ext.detailedResolution
 import com.example.mobile_spotter.ext.detailedVersion
 import com.example.mobile_spotter.presentation.base.BaseViewModel
 import com.example.mobile_spotter.utils.*
-import com.example.mobile_spotter.utils.Failure
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class DeviceListViewModel @ViewModelInject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val getUsersUseCase: GetUsersUseCase,
-    private val preferencesStorage: PreferencesStorage
+    private val preferencesStorage: PreferencesStorage,
+    private val takeDeviceUseCase: TakeDeviceUseCase,
+    private val returnDeviceUseCase: ReturnDeviceUseCase
 ) : BaseViewModel() {
     val getDevicesOperation = MutableLiveData<LongOperation<DeviceList>>()
     val getUsersOperation = MutableLiveData<LongOperation<UserList>>()
+
+    val moveDevicesOperation = MutableLiveData<LongOperation<Unit>>()
 
     val queryLiveData = MutableLiveData<String>()
 
@@ -34,6 +36,8 @@ class DeviceListViewModel @ViewModelInject constructor(
     val refreshFilters = MutableLiveData<Unit>()
 
     val deviceListLiveData = MutableLiveData<List<Device>>()
+
+    val selectionValue = MutableLiveData<SelectionValue>()
 
     var filterParameters = DeviceFilter()
     var initialRequest = true
@@ -97,12 +101,46 @@ class DeviceListViewModel @ViewModelInject constructor(
         refreshFilters.value = Unit
     }
 
+    fun setOnlyMine(mine: Boolean) {
+        filterParameters.apply {
+            onlyMine = mine
+        }
+        refreshFilters.value = Unit
+    }
+
+    fun takeOrReturnDevices(list: List<FullDeviceInfo>) {
+        list.forEach {
+            if(it.owner?.id != userId) {
+                viewModelScope.launch {
+                    progressive {
+                        takeDeviceUseCase.execute(
+                            EditDeviceRequest(
+                                it.device.id,
+                                preferencesStorage.userId ?: 0
+                            )
+                        )
+                    }.collect {
+                        moveDevicesOperation.postValue(it)
+                    }
+                }
+            } else {
+                viewModelScope.launch {
+                    progressive {
+                        returnDeviceUseCase.execute(it.device.id)
+                    }.collect {
+                        moveDevicesOperation.postValue(it)
+                    }
+                }
+            }
+        }
+    }
+
     fun handleCode(code: String): Any? {
         val entity = userList.firstOrNull { it.rfid == code } ?: deviceList.firstOrNull { it.tokenUid == code }
         entity?.let {
             when (it) {
                 is User -> {
-                    preferencesStorage.userId = it.id
+                    userId = it.id
                 }
                 is Device -> {
                     preferencesStorage.deviceId = it.id
@@ -112,7 +150,36 @@ class DeviceListViewModel @ViewModelInject constructor(
         return entity
     }
 
+    fun handleSelection(device: Device) {
+        selectionValue.value?.let { selection ->
+            if (device.ownerId != userId) {
+                selection.toBeTaken++
+            } else {
+                selection.toBeReturned++
+            }
+            selectionValue.postValue(selection)
+        }
+
+    }
+
+    fun handleUnselection(device: Device) {
+        selectionValue.value?.let { selection ->
+            if (device.ownerId != userId) {
+                selection.toBeTaken--
+            } else {
+                selection.toBeReturned--
+            }
+            selectionValue.postValue(selection)
+        }
+
+    }
+
+    fun clearSelection() {
+        selectionValue.postValue(SelectionValue())
+    }
+
     private fun makeDevicesRequest() {
+        selectionValue.postValue(SelectionValue())
         viewModelScope.launch {
             progressive {
                 getDevicesUseCase.execute()

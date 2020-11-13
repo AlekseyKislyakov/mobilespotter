@@ -92,25 +92,17 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToUserListFragment())
         }
 
-        buttonResetUser.setOnClickListener {
-            viewModel.userId = -1
-            refreshActionButtons()
-            showSnackbar(getString(R.string.device_list_user_reset))
-        }
-
         refreshActionButtons()
-
-        toolbar.setNavigationOnClickListener {
-            deviceListAdapter.clearSelection()
-        }
     }
 
     override fun onCodeRecognized(code: String) {
         val entity = viewModel.handleCode(code)
         if (entity != null && entity is User) {
             showSnackbar(getString(R.string.user_list_choose_owner, entity.fullName()))
+            deviceListAdapter.currentUserId = entity.id
         } else if (entity is Device) {
-            findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(entity.id.toString()))
+            // findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(entity.id.toString()))
+            deviceListAdapter.selectByCode(entity)
         } else {
             showSnackbar(getString(R.string.common_card))
         }
@@ -122,6 +114,18 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         recyclerViewDevices.addItemDecoration(HolderDecorator(8.dpToPx()))
 
+        buttonResetUser.setOnClickListener {
+            viewModel.userId = -1
+            deviceListAdapter.currentUserId = -1
+            refreshActionButtons()
+            showSnackbar(getString(R.string.device_list_user_reset))
+        }
+
+        toolbar.setNavigationOnClickListener {
+            deviceListAdapter.clearSelection()
+            viewModel.clearSelection()
+        }
+
         deviceListAdapter.onClickListener = {
             viewModel.setDevice(it)
             findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(it.id.toString()))
@@ -129,16 +133,30 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         deviceListAdapter.onItemSelected = {
             showSelectionInToolbar()
+            it?.let {
+                viewModel.handleSelection(it)
+            }
+        }
+
+        deviceListAdapter.onItemUnselected = {
+            showSelectionInToolbar()
+            it?.let {
+                viewModel.handleUnselection(it)
+            }
         }
 
         deviceListAdapter.onEmptyListAction = {
             emptyView.isVisible = it
         }
 
+        buttonTakeOrReturn.setOnClickListener {
+            viewModel.takeOrReturnDevices(deviceListAdapter.getSelectedDevices())
+        }
+
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    viewModel.setQuery(it)
-                }
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                viewModel.setQuery(it)
+            }
     }
 
     override fun observeOperations() {
@@ -162,6 +180,23 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         observe(viewModel.refreshFilters) {
             refreshFilters(viewModel.filterParameters)
         }
+
+        observe(viewModel.selectionValue) { selection ->
+            if (selection.toBeTaken > 0 && selection.toBeReturned > 0) {
+                buttonTakeOrReturn.text =
+                    getString(R.string.device_list_take_n, selection.toBeTaken.toString()) +
+                            getString(R.string.common_comma_separator) +
+                            getString(R.string.device_list_return_n, selection.toBeReturned.toString())
+            } else if (selection.toBeTaken > 0) {
+                buttonTakeOrReturn.text = getString(R.string.device_list_take_n, selection.toBeTaken.toString())
+            } else if (selection.toBeReturned > 0) {
+                buttonTakeOrReturn.text = getString(R.string.device_list_return_n, selection.toBeReturned.toString())
+            }
+        }
+
+        observe(viewModel.moveDevicesOperation) {
+            handleMoveDeviceState(it.state)
+        }
     }
 
     override fun onKeyboardHeightChanged(value: Int) {
@@ -176,7 +211,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     private fun showSelectionInToolbar() {
-        if(deviceListAdapter.selectedCount > 0) {
+        if (deviceListAdapter.selectedCount > 0) {
             toolbar.setNavigationIcon(R.drawable.ic_clear_black)
             toolbar.title = deviceListAdapter.selectedCount.toString()
         } else {
@@ -207,6 +242,24 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 buttonRetry.isVisible = true
                 recyclerViewDevices.isVisible = false
                 swipeRefreshLayout.isRefreshing = false
+            }
+        }
+    }
+
+    private fun handleMoveDeviceState(state: OpState) {
+        when (state) {
+            OpState.LOADING -> {
+                buttonTakeOrReturn.isEnabled = false
+            }
+            OpState.SUCCESS -> {
+                buttonTakeOrReturn.isEnabled = true
+                showSnackbar(getString(R.string.device_list_success))
+                deviceListAdapter.clearSelection()
+                viewModel.clearSelection()
+                viewModel.getDevices()
+            }
+            OpState.FAILURE -> {
+                buttonTakeOrReturn.isEnabled = true
             }
         }
     }
@@ -244,6 +297,9 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             viewModel.setFreeType(isChecked)
         }
 
+        checkBoxOnlyMine.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.setOnlyMine(isChecked)
+        }
     }
 
     private fun refreshActionButtons() {
@@ -266,15 +322,15 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         radioButtonIOS.isChecked = filter.os == OS_IOS
 
         resolutionListAdapter.replaceItems(
-                filter.resolutionSet.toList(),
-                filter.selectedResolutionSet.toList(),
-                filter.os
+            filter.resolutionSet.toList(),
+            filter.selectedResolutionSet.toList(),
+            filter.os
         )
 
         versionListAdapter.replaceItems(
-                filter.versionSet.toList(),
-                filter.selectedVersionSet.toList(),
-                filter.os
+            filter.versionSet.toList(),
+            filter.selectedVersionSet.toList(),
+            filter.os
         )
 
         deviceListAdapter.applyFilter(filter, viewModel.queryLiveData.value ?: "")
@@ -286,17 +342,18 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     private fun handleInfo(userList: List<User>, deviceList: List<Device>) {
         deviceListAdapter.applyData(userList, deviceList)
+        deviceListAdapter.currentUserId = viewModel.userId ?: 0
     }
 
     private fun createChooseResolutionDialog(): Dialog? {
         activity?.let { context ->
             if (chooseResolutionDialog == null) {
                 val chooseConverterView = LayoutInflater.from(context)
-                        .inflate(R.layout.view_string_picker, null)
+                    .inflate(R.layout.view_string_picker, null)
 
                 with(chooseConverterView) {
                     resolutionListAdapter.selectedSet =
-                            viewModel.filterParameters.selectedResolutionSet
+                        viewModel.filterParameters.selectedResolutionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -324,11 +381,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         activity?.let { context ->
             if (chooseVersionDialog == null) {
                 val chooseVersionView = LayoutInflater.from(context)
-                        .inflate(R.layout.view_string_picker, null)
+                    .inflate(R.layout.view_string_picker, null)
 
                 with(chooseVersionView) {
                     versionListAdapter.selectedSet =
-                            viewModel.filterParameters.selectedVersionSet
+                        viewModel.filterParameters.selectedVersionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false

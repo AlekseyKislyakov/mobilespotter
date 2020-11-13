@@ -11,5 +11,6 @@ data class DeviceFilter(
     val resolutionSet: Set<String> = setOf(),
     var selectedResolutionSet: MutableSet<String> = mutableSetOf(),
     var onlyAvailable: Boolean = false,
-    var nonPrivate: Boolean = false
+    var nonPrivate: Boolean = false,
+    var onlyMine: Boolean = false
 )
