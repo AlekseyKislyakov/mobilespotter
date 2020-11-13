@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_deviceListFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_deviceListFragment_to_userListFragment"
+            app:destination="@id/userListFragment" />
 
     </fragment>
 

@@ -18,5 +18,7 @@
     <color name="soft_green_white">#91faad</color>
     <color name="soft_red">#bd3333</color>
     <color name="soft_red_white">#fc8b8b</color>
+    <color name="soft_blue">#6871ed</color>
 
+    <color name="snow_flurry">#DFFDD8</color>
 </resources>

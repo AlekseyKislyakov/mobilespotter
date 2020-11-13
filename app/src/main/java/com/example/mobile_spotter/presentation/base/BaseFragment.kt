@@ -112,7 +112,7 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
                                 delay(500)
                                 withContext(Dispatchers.Main) {
                                     anim.resetTransition()
-                                    readRfidCardDialog?.dismiss()
+                                    // readRfidCardDialog?.dismiss()
                                 }
                             }
                         }

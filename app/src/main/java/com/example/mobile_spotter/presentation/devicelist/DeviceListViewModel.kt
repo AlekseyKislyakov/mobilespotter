@@ -28,7 +28,6 @@ class DeviceListViewModel @ViewModelInject constructor(
     val getUsersOperation = MutableLiveData<LongOperation<UserList>>()
 
     val queryLiveData = MutableLiveData<String>()
-    val applyUser = MutableLiveData<User>()
 
     val applyDevice = MutableLiveData<Device>()
 
@@ -42,16 +41,18 @@ class DeviceListViewModel @ViewModelInject constructor(
     val userList = mutableListOf<User>()
     val deviceList = mutableListOf<Device>()
 
+    var userId: Int?
+        get() = preferencesStorage.userId
+        set(value) {
+            preferencesStorage.userId = value
+        }
+
     fun getDevices() {
         makeDevicesRequest()
     }
 
     fun setQuery(query: CharSequence) {
         queryLiveData.value = query.toString()
-    }
-
-    fun selectUser(user: User) {
-        applyUser.value = user
     }
 
     fun setDevice(device: Device) {
@@ -149,13 +150,13 @@ class DeviceListViewModel @ViewModelInject constructor(
 
     private fun fillFilterValue() {
         filterParameters = DeviceFilter(
-                os = OS_ALL,
-                versionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet() ?: mutableSetOf(),
-                selectedVersionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet()
-                        ?: mutableSetOf(),
-                resolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet() ?: mutableSetOf(),
-                selectedResolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet()
-                        ?: mutableSetOf()
+            os = OS_ALL,
+            versionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet() ?: mutableSetOf(),
+            selectedVersionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet()
+                ?: mutableSetOf(),
+            resolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet() ?: mutableSetOf(),
+            selectedResolutionSet = deviceListLiveData.value?.map { it.detailedResolution() }?.toMutableSet()
+                ?: mutableSetOf()
         )
         refreshFilters.value = Unit
     }

@@ -26,7 +26,10 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
     private var currentFilter = DeviceFilter()
 
     var onClickListener: (Device) -> Unit = {}
+    var onItemSelected: (Device?) -> Unit = {}
     var onEmptyListAction: (Boolean) -> Unit = {}
+
+    var selectedCount = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -94,6 +97,15 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         handleData()
     }
 
+    fun clearSelection() {
+        filteredDevices.forEach {
+            it.selected = false
+        }
+        selectedCount = 0
+        notifyDataSetChanged()
+        onItemSelected.invoke(null)
+    }
+
     private fun handleData() {
         filteredDevices.clear()
         filteredDevices.addAll(deviceData)
@@ -108,9 +120,17 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         private val textViewVersion = itemView.textViewDeviceVersion
         private val textViewStatus = itemView.textViewStatus
 
+        private val cardDeviceList = itemView.cardDeviceList
+
         private val imageViewDeviceAvatar = itemView.imageViewDeviceAvatar
 
         fun bind(data: FullDeviceInfo) {
+            if(data.selected) {
+                cardDeviceList.setCardBackgroundColor(itemView.resources.getColor(R.color.snow_flurry))
+            } else {
+                cardDeviceList.setCardBackgroundColor(itemView.resources.getColor(R.color.white))
+            }
+
             textViewDeviceName.text = data.device.detailedName()
             textViewVersion.text = data.device.fullVersion()
 
@@ -142,8 +162,30 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
             }
 
             itemView.setOnClickListener {
-                onClickListener.invoke(data.device)
+                if(selectedCount > 0) {
+                    setSelection(data)
+                    onItemSelected.invoke(data.device)
+                } else {
+                    onClickListener.invoke(data.device)
+                }
             }
+
+            itemView.setOnLongClickListener {
+                setSelection(data)
+
+                onItemSelected.invoke(data.device)
+                true
+            }
+        }
+
+        private fun setSelection(data: FullDeviceInfo) {
+            if(!data.selected) {
+                selectedCount++
+            } else {
+                selectedCount--
+            }
+            data.selected = !data.selected
+            notifyDataSetChanged()
         }
     }
 }

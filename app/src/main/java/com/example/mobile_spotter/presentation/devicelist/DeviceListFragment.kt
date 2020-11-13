@@ -88,6 +88,21 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         }
 
         setupFilterFields()
+        buttonChooseUser.setOnClickListener {
+            findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToUserListFragment())
+        }
+
+        buttonResetUser.setOnClickListener {
+            viewModel.userId = -1
+            refreshActionButtons()
+            showSnackbar(getString(R.string.device_list_user_reset))
+        }
+
+        refreshActionButtons()
+
+        toolbar.setNavigationOnClickListener {
+            deviceListAdapter.clearSelection()
+        }
     }
 
     override fun onCodeRecognized(code: String) {
@@ -99,6 +114,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         } else {
             showSnackbar(getString(R.string.common_card))
         }
+        refreshActionButtons()
     }
 
     override fun onBindViewModel() {
@@ -110,6 +126,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             viewModel.setDevice(it)
             findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(it.id.toString()))
         }
+
+        deviceListAdapter.onItemSelected = {
+            showSelectionInToolbar()
+        }
+
         deviceListAdapter.onEmptyListAction = {
             emptyView.isVisible = it
         }
@@ -152,6 +173,18 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 showBottomNavigation()
             }
         }
+    }
+
+    private fun showSelectionInToolbar() {
+        if(deviceListAdapter.selectedCount > 0) {
+            toolbar.setNavigationIcon(R.drawable.ic_clear_black)
+            toolbar.title = deviceListAdapter.selectedCount.toString()
+        } else {
+            toolbar.navigationIcon = null
+            toolbar.setTitle(R.string.device_list_choose_device)
+        }
+        refreshActionButtons()
+
     }
 
     private fun handleGetDevicesState(state: OpState) {
@@ -211,6 +244,12 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             viewModel.setFreeType(isChecked)
         }
 
+    }
+
+    private fun refreshActionButtons() {
+        layoutResetUser.isVisible = viewModel.userId != -1 && deviceListAdapter.selectedCount == 0
+        layoutSelectUser.isVisible = viewModel.userId == -1
+        layoutTakeOrReturn.isVisible = deviceListAdapter.selectedCount > 0 && viewModel.userId != -1
     }
 
     private fun rollFilters() {
