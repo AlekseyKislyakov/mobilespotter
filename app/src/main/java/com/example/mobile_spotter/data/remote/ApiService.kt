@@ -13,10 +13,10 @@ interface ApiService {
     @GET("users")
     suspend fun getAllUsers(@Query("token") token: String): UserList
 
-    @GET("http://location.handh.ru:8877/device?token=test")
-    suspend fun getAllDevices(): DeviceList
+    @GET("http://location.handh.ru:8877/device")
+    suspend fun getAllDevices(@Query("token") token: String): DeviceList
 
-    @POST("http://location.handh.ru:8877/owner?token=test")
-    suspend fun editDeviceStatus(@Body editDevice: EditDeviceRequest)
+    @POST("http://location.handh.ru:8877/owner")
+    suspend fun editDeviceStatus(@Query("token") token: String, @Body editDevice: EditDeviceRequest)
 
 }

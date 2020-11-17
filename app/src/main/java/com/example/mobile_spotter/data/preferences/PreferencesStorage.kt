@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.mobile_spotter.data.remote.USER_TOKEN
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -50,7 +51,7 @@ class PreferencesStorage @Inject constructor(
         }
 
     var token: String?
-        get() = pref.getString(KEY_TOKEN, "keddva5rd")
+        get() = pref.getString(KEY_TOKEN, USER_TOKEN)
         set(token) {
             pref.edit().putString(KEY_TOKEN, token).apply()
         }
