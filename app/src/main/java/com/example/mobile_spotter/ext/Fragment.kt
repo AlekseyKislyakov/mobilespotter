@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import com.example.mobile_spotter.MainActivity
+import com.example.mobile_spotter.R
 
 fun <T> LifecycleOwner.observe(liveData: LiveData<T>, action: (T) -> Unit) {
     liveData.observe(this, Observer { result -> action.invoke(result) })
@@ -40,6 +42,9 @@ fun Fragment.hideKeyboard(view: View) {
         }
     }
 }
+
+inline val FragmentManager.currentFragment: Fragment?
+    get() = this.findFragmentById(R.id.nav_host_fragment)
 
 fun Fragment.showSnackbar(text: String, isLong: Boolean = false) {
     (activity as MainActivity).showShackbar(text, isLong)

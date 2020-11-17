@@ -32,9 +32,9 @@ class PreferencesStorage @Inject constructor(
     }
 
     var userId: Int?
-        get() = pref.getInt(KEY_USER_ID, -1)
+        get() = pref.getInt(KEY_USER_ID, 0)
         set(userId) {
-            pref.edit().putInt(KEY_USER_ID, userId ?: -1).apply()
+            pref.edit().putInt(KEY_USER_ID, userId ?: 0).apply()
         }
 
     var deviceId: Int?

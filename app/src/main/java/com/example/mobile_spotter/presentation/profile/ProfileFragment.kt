@@ -81,4 +81,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     private fun handleInfo(userList: List<User>, deviceList: List<Device>) {
     }
 
+    override fun logoutTimerEvent() { }
+
 }

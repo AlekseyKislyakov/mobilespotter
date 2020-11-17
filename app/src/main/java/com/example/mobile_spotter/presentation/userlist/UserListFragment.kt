@@ -134,8 +134,12 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         if (entity != null && entity is User) {
             showSnackbar(getString(R.string.user_list_choose_owner, entity.fullName()))
         } else {
-            showSnackbar("Неизвестная карта")
+            showSnackbar(getString(R.string.common_unknown_card))
         }
+    }
+
+    override fun logoutTimerEvent() {
+        findNavController().navigate(UserListFragmentDirections.actionUserListToDeviceListFragment("0"))
     }
 
     private fun handleGetUsersState(state: OpState) {
@@ -154,6 +158,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
                 viewLoading.isVisible = false
                 buttonRetry.isVisible = true
                 recyclerViewUsers.isVisible = false
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }

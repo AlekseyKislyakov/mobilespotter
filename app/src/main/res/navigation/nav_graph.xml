@@ -9,6 +9,11 @@
         android:id="@+id/userListFragment"
         android:name="com.example.mobile_spotter.presentation.userlist.UserListFragment"
         android:label="UserListFragment">
+
+        <action
+            android:id="@+id/action_userList_to_DeviceListFragment"
+            app:destination="@id/deviceListFragment"
+            app:popUpTo="@+id/nav_graph"/>
     </fragment>
 
     <fragment

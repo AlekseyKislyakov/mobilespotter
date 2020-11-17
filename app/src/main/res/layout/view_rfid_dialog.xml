@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
 
@@ -25,6 +26,19 @@
         android:layout_marginTop="12dp"
         android:backgroundTint="@color/black"
         android:src="@drawable/status_transition" />
+
+    <TextView
+        android:id="@+id/dialogMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/soft_green"
+        tools:text="Выбран пользователь: Матвеева Ольга" />
 
     <TextView
         android:id="@+id/buttonDiscard"

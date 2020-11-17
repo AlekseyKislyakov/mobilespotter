@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.data.entities.OS_ALL
-import com.example.mobile_spotter.ext.dpToPx
-import com.example.mobile_spotter.ext.fullName
-import com.example.mobile_spotter.ext.observe
-import com.example.mobile_spotter.ext.showSnackbar
+import com.example.mobile_spotter.ext.*
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.HolderDecorator
 import com.example.mobile_spotter.utils.LongOperation
@@ -98,15 +95,19 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     override fun onCodeRecognized(code: String) {
         val entity = viewModel.handleCode(code)
         if (entity != null && entity is User) {
-            showSnackbar(getString(R.string.user_list_choose_owner, entity.fullName()))
+            showRFIDMessage(getString(R.string.user_list_choose_owner, entity.fullName()))
             deviceListAdapter.currentUserId = entity.id
         } else if (entity is Device) {
-            // findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToDeviceDetailsFragment(entity.id.toString()))
             deviceListAdapter.selectByCode(entity)
+            showRFIDMessage(entity.detailedName())
         } else {
             showSnackbar(getString(R.string.common_card))
         }
         refreshActionButtons()
+    }
+
+    override fun setRFIDButtonElevation(value: Int) {
+        super.setRFIDButtonElevation(80)
     }
 
     override fun onBindViewModel() {
@@ -115,7 +116,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         recyclerViewDevices.addItemDecoration(HolderDecorator(8.dpToPx()))
 
         buttonResetUser.setOnClickListener {
-            viewModel.userId = -1
+            viewModel.userId = 0
             deviceListAdapter.currentUserId = -1
             refreshActionButtons()
             showSnackbar(getString(R.string.device_list_user_reset))
@@ -179,13 +180,14 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         observe(viewModel.refreshFilters) {
             refreshFilters(viewModel.filterParameters)
+            viewModel.clearSelection()
         }
 
         observe(viewModel.selectionValue) { selection ->
             if (selection.toBeTaken > 0 && selection.toBeReturned > 0) {
                 buttonTakeOrReturn.text =
                     getString(R.string.device_list_take_n, selection.toBeTaken.toString()) +
-                            getString(R.string.common_comma_separator) +
+                            ", " +
                             getString(R.string.device_list_return_n, selection.toBeReturned.toString())
             } else if (selection.toBeTaken > 0) {
                 buttonTakeOrReturn.text = getString(R.string.device_list_take_n, selection.toBeTaken.toString())
@@ -197,6 +199,8 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         observe(viewModel.moveDevicesOperation) {
             handleMoveDeviceState(it.state)
         }
+
+        showRFIDMessage("165516")
     }
 
     override fun onKeyboardHeightChanged(value: Int) {
@@ -208,6 +212,12 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 showBottomNavigation()
             }
         }
+    }
+
+    override fun logoutTimerEvent() {
+        viewModel.userId = 0
+        makeDevicesRequest()
+        refreshActionButtons()
     }
 
     private fun showSelectionInToolbar() {
@@ -229,6 +239,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 viewLoading.isVisible = true
                 buttonRetry.isGone = true
                 recyclerViewDevices.isVisible = false
+                swipeRefreshLayout.isRefreshing = false
             }
             OpState.SUCCESS -> {
                 viewLoading.isVisible = false
@@ -242,6 +253,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 buttonRetry.isVisible = true
                 recyclerViewDevices.isVisible = false
                 swipeRefreshLayout.isRefreshing = false
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }
@@ -260,6 +272,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             }
             OpState.FAILURE -> {
                 buttonTakeOrReturn.isEnabled = true
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }
@@ -303,9 +316,9 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     private fun refreshActionButtons() {
-        layoutResetUser.isVisible = viewModel.userId != -1 && deviceListAdapter.selectedCount == 0
-        layoutSelectUser.isVisible = viewModel.userId == -1
-        layoutTakeOrReturn.isVisible = deviceListAdapter.selectedCount > 0 && viewModel.userId != -1
+        layoutResetUser.isVisible = viewModel.userId != 0 && deviceListAdapter.selectedCount == 0
+        layoutSelectUser.isVisible = viewModel.userId == 0
+        layoutTakeOrReturn.isVisible = deviceListAdapter.selectedCount > 0 && viewModel.userId != 0
     }
 
     private fun rollFilters() {

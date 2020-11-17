@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.mobile_spotter.R
-import com.example.mobile_spotter.data.entities.ANDROID
 import com.example.mobile_spotter.data.entities.Device
 import com.example.mobile_spotter.data.entities.OS_ANDROID
 import com.example.mobile_spotter.data.entities.User
@@ -159,6 +158,11 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
         }
     }
 
+    override fun logoutTimerEvent() {
+        findNavController().popBackStack()
+        viewModel.originId = 0
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         hideSnackbar()
@@ -181,6 +185,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 viewLoading.isVisible = true
                 buttonRetry.isGone = true
                 layoutContent.isVisible = false
+                swipeRefreshLayout.isRefreshing = false
             }
             OpState.SUCCESS -> {
                 viewLoading.isVisible = false
@@ -193,6 +198,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonRetry.isVisible = true
                 layoutContent.isVisible = false
                 swipeRefreshLayout.isRefreshing = false
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }
@@ -219,6 +225,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonTakeDevice.text = getString(R.string.device_details_take)
                 buttonTakeDeviceGeneral.isClickable = true
                 buttonTakeDeviceGeneral.text = getString(R.string.device_details_take_as, selectedUser?.fullName())
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }
@@ -248,6 +255,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonReturnDevice.text = getString(R.string.device_details_return)
                 buttonReturnDeviceGeneral.isClickable = true
                 buttonReturnDeviceGeneral.text = getString(R.string.device_details_return_as, selectedUser?.fullName())
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }

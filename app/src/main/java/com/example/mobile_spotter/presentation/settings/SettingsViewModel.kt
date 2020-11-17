@@ -41,7 +41,7 @@ class SettingsViewModel @ViewModelInject constructor(
     }
 
     fun getCurrentUserId(): Int {
-        return preferencesStorage.userId ?: -1
+        return preferencesStorage.userId ?: 0
     }
 
     fun getPublicAccountValue(): Boolean {

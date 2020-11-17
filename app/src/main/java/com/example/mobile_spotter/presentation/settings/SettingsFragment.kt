@@ -98,18 +98,18 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
                 viewLoading.isVisible = true
                 buttonRetry.isGone = true
                 layoutContent.isVisible = false
+                swipeRefreshLayout.isRefreshing = false
             }
             OpState.SUCCESS -> {
                 viewLoading.isVisible = false
                 buttonRetry.isGone = true
                 layoutContent.isVisible = true
-                swipeRefreshLayout.isRefreshing = false
             }
             OpState.FAILURE -> {
                 viewLoading.isVisible = false
                 buttonRetry.isVisible = true
                 layoutContent.isVisible = false
-                swipeRefreshLayout.isRefreshing = false
+                showSnackbar(getString(R.string.common_network_error))
             }
         }
     }
@@ -118,4 +118,5 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
         showSnackbar(code)
     }
 
+    override fun logoutTimerEvent() { }
 }

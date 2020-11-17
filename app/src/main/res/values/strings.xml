@@ -35,7 +35,7 @@
     <string name="device_list_toolbar_title">Выбор устройства</string>
     <string name="device_list_only_free">Только свободные</string>
     <string name="device_list_only_organization">Не показывать личные устройства</string>
-    <string name="device_list_only_my">Только мои устройства</string>
+    <string name="device_list_only_my">Только взятые мной устройства</string>
     <string name="device_list_free">Свободен</string>
     <string name="device_list_busy">Занят. Арендатор - %s</string>
     <string name="device_list_choose_value">Выберите значение</string>
@@ -87,5 +87,7 @@
     <string name="common_comma_separator">,&#32;</string>
     <string name="device_list_user_reset">Пользователь сброшен</string>
     <string name="device_list_success">Устройства успешно назначены</string>
+    <string name="common_unknown_card">Неизвестная карта</string>
+    <string name="common_network_error">Ошибка загрузки данных</string>
 
 </resources>
