@@ -45,7 +45,7 @@
                     android:layout_height="match_parent">
 
                     <ImageView
-                        android:id="@+id/imageViewDeviceAvatar"
+                        android:id="@+id/imageViewDeviceAvatarRow"
                         android:layout_width="108dp"
                         android:layout_height="108dp"
                         android:layout_margin="16dp"
@@ -63,8 +63,8 @@
                         app:layout_constraintBottom_toTopOf="@+id/textViewDeviceName"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
-                        app:layout_constraintTop_toTopOf="@+id/imageViewDeviceAvatar" />
+                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarRow"
+                        app:layout_constraintTop_toTopOf="@+id/imageViewDeviceAvatarRow" />
 
                     <TextView
                         android:id="@+id/textViewDeviceName"
@@ -76,7 +76,7 @@
                         app:layout_constraintBottom_toTopOf="@+id/textViewDeviceNicknameTitle"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
+                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarRow"
                         app:layout_constraintTop_toBottomOf="@+id/textViewDeviceNameTitle"
                         tools:text="Meizu Note 2" />
 
@@ -92,7 +92,7 @@
                         app:layout_constraintBottom_toTopOf="@+id/textViewDeviceNickname"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
+                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarRow"
                         app:layout_constraintTop_toBottomOf="@+id/textViewDeviceName" />
 
                     <TextView
@@ -103,10 +103,10 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="16dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageViewDeviceAvatar"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageViewDeviceAvatarRow"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
+                        app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarRow"
                         app:layout_constraintTop_toBottomOf="@+id/textViewDeviceNicknameTitle"
                         tools:text="Леново желтый" />
 
@@ -122,7 +122,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageViewDeviceAvatar" />
+                        app:layout_constraintTop_toBottomOf="@+id/imageViewDeviceAvatarRow" />
 
                     <TextView
                         android:id="@+id/textViewDeviceOS"

@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.fragment_device_details.*
 import kotlinx.android.synthetic.main.fragment_device_details.buttonRetry
 import kotlinx.android.synthetic.main.fragment_device_details.swipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_device_details.viewLoading
+import java.util.Locale
 
 @AndroidEntryPoint
 class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
@@ -82,26 +83,18 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(getString(R.string.device_details_returned))
                     .setPositiveButton(getString(R.string.common_ok), null)
-                    .setOnDismissListener {
-                        makeDevicesRequest()
-                    }
+                    .setOnDismissListener { makeDevicesRequest() }
                     .show()
             }
         }
-        observe(viewModel.userListLiveData) {
+        observe(viewModel.userListLiveData) { userList ->
             if (viewModel.deviceListLiveData.value != null) {
-                handleInfo(
-                    it,
-                    viewModel.deviceListLiveData.value ?: emptyList()
-                )
+                handleInfo(userList,viewModel.deviceListLiveData.value ?: emptyList())
             }
         }
-        observe(viewModel.deviceListLiveData) {
+        observe(viewModel.deviceListLiveData) { deviceList ->
             if (viewModel.userListLiveData.value != null) {
-                handleInfo(
-                    viewModel.userListLiveData.value ?: emptyList(),
-                    it
-                )
+                handleInfo(viewModel.userListLiveData.value ?: emptyList(), deviceList)
             }
         }
     }
@@ -154,7 +147,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             deviceId = entity.id.toString()
             makeDevicesRequest()
         } else {
-            showSnackbar("Неизвестная карта")
+            showSnackbar(getString(R.string.common_unknown_card))
         }
     }
 
@@ -166,17 +159,6 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
     override fun onDestroy() {
         super.onDestroy()
         hideSnackbar()
-    }
-
-    override fun onKeyboardHeightChanged(value: Int) {
-//        if (value != -1) {
-//            hideBottomNavigation()
-//        } else {
-//            GlobalScope.launch(context = Dispatchers.Main) {
-//                delay(50)
-//                showBottomNavigation()
-//            }
-//        }
     }
 
     private fun handleGetDevicesState(state: OpState) {
@@ -268,14 +250,14 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
         deviceInfo = deviceList.firstOrNull { deviceId == it.id.toString() }
         deviceInfo?.let { deviceInfo ->
             // required fields
-            if (deviceInfo.osType.toLowerCase() == OS_ANDROID) {
-                imageViewDeviceAvatar.setImageResource(R.drawable.ic_android_robot)
+            if (deviceInfo.osType.toLowerCase(Locale.getDefault()) == OS_ANDROID) {
+                imageViewDeviceAvatarRow.setImageResource(R.drawable.ic_android_robot)
             } else {
-                imageViewDeviceAvatar.setImageResource(R.drawable.ic_apple_logo_grey)
+                imageViewDeviceAvatarRow.setImageResource(R.drawable.ic_apple_logo_grey)
             }
 
             textViewDeviceName.text = deviceInfo.name
-            textViewDeviceOS.text = "${deviceInfo.osType} ${deviceInfo.osVersion}"
+            textViewDeviceOS.text = getString(R.string.common_whitespace_separator, deviceInfo.osType, deviceInfo.osVersion)
             textViewDeviceResolution.text = deviceInfo.resolution
             textViewDeviceType.text = deviceInfo.type
 

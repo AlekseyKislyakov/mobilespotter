@@ -12,12 +12,12 @@ fun Device.detailedName(context: Context): String {
     }
 }
 
-fun Device.detailedResolution(context: Context): String {
-    return context.getString(R.string.common_whitespace_separator, osType, resolution)
+fun Device.detailedResolution(): String {
+    return  "$osType $resolution"
 }
 
-fun Device.detailedVersion(context: Context): String {
-    return context.getString(R.string.common_whitespace_separator, osType, osVersion)
+fun Device.detailedVersion(): String {
+    return "$osType $osVersion"
 }
 
 fun Device.fullVersion(context: Context): String {

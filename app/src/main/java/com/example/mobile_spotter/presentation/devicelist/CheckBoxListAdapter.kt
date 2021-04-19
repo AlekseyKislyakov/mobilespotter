@@ -60,6 +60,15 @@ class CheckBoxListAdapter @Inject constructor() :
         notifyDataSetChanged()
     }
 
+    fun selectOrRemoveSelection() {
+        if(selectedSet.isEmpty()) {
+            selectedSet.addAll(itemSet)
+        } else {
+            selectedSet.clear()
+        }
+        notifyDataSetChanged()
+    }
+
     inner class StringCheckboxViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: String) = with(itemView) {
             checkBoxListItem.text = item

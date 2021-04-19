@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardDeviceList"
+    android:id="@+id/cardDeviceListTile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="16dp"
@@ -16,7 +16,7 @@
         android:paddingBottom="10dp">
 
         <ImageView
-            android:id="@+id/imageViewDeviceAvatar"
+            android:id="@+id/imageViewDeviceAvatarTile"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
@@ -29,7 +29,7 @@
             app:srcCompat="@drawable/ic_android_robot" />
 
         <TextView
-            android:id="@+id/textViewDeviceName"
+            android:id="@+id/textViewDeviceNameTile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -37,30 +37,30 @@
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@+id/textViewDeviceVersion"
+            app:layout_constraintBottom_toTopOf="@+id/imageViewDeviceAvatarTile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
-            app:layout_constraintTop_toTopOf="@+id/imageViewDeviceAvatar"
+            app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarTile"
+            app:layout_constraintTop_toTopOf="@+id/imageViewDeviceAvatarTile"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Meizu Note 2" />
 
         <TextView
-            android:id="@+id/textViewDeviceVersion"
+            android:id="@+id/textViewDeviceVersionTile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/textViewStatus"
+            app:layout_constraintBottom_toTopOf="@+id/textViewStatusTile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDeviceName"
+            app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarTile"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDeviceNameTile"
             tools:text="Android 5.1" />
 
         <TextView
-            android:id="@+id/textViewStatus"
+            android:id="@+id/textViewStatusTile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -68,11 +68,11 @@
             android:layout_marginEnd="16dp"
             android:textStyle="bold"
             app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="@+id/imageViewDeviceAvatar"
+            app:layout_constraintBottom_toBottomOf="@+id/imageViewDeviceAvatarTile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/textViewDeviceVersion"
+            app:layout_constraintStart_toEndOf="@id/imageViewDeviceAvatarTile"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDeviceVersionTile"
             tools:text="Занят. Арендатор - Дьяков Никита svsd sd vvssdvsd vsvd svd vs dvsd " />
 
 

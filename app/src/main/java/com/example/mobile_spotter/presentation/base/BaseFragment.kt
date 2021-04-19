@@ -13,9 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.ext.KeyboardShowListener
-import com.example.mobile_spotter.ext.dpToPx
+import com.example.mobile_spotter.ext.hideSoftKeyboard
 import com.example.mobile_spotter.ext.setMargins
-import com.example.mobile_spotter.ext.showSnackbar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.view_rfid_dialog.*
 import kotlinx.android.synthetic.main.view_rfid_dialog.view.*
@@ -83,27 +82,17 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
         setupRFIDButtonVisibility()
     }
 
+    override fun onKeyboardHeightChanged(value: Int) {
+    }
+
+    override fun onStop() {
+        hideSoftKeyboard()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         readRfidCardDialog?.dismiss()
-    }
-
-    fun hideBottomNavigation() {
-//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-//        bottomNavigationView?.isVisible = false
-    }
-
-    fun showBottomNavigation() {
-//        val bottomNavigationView = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-//        bottomNavigationView?.isVisible = true
-    }
-
-    override fun onKeyboardHeightChanged(value: Int) {
-        if (value != -1) {
-            hideBottomNavigation()
-        } else {
-            showBottomNavigation()
-        }
     }
 
     private fun checkKeyboardAvailability(): Boolean {
@@ -117,7 +106,6 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
                 delay(2500)
                 withContext(Dispatchers.Main) {
                     it.dialogMessage.text = ""
-                    // readRfidCardDialog?.dismiss()
                 }
             }
         }
@@ -142,7 +130,6 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout), Keyboard
                                     delay(2500)
                                     withContext(Dispatchers.Main) {
                                         anim.resetTransition()
-                                        // readRfidCardDialog?.dismiss()
                                     }
                                 }
                             }

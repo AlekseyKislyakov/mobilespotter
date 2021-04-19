@@ -8,6 +8,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
@@ -15,7 +16,6 @@ import com.example.mobile_spotter.data.entities.OS_ALL
 import com.example.mobile_spotter.ext.*
 import com.example.mobile_spotter.presentation.base.BaseFragment
 import com.example.mobile_spotter.utils.HolderDecorator
-import com.example.mobile_spotter.utils.LongOperation
 import com.example.mobile_spotter.utils.OpState
 import com.example.mobile_spotter.utils.combineStates
 import com.jakewharton.rxbinding4.appcompat.itemClicks
@@ -28,7 +28,6 @@ import kotlinx.android.synthetic.main.fragment_device_list.emptyView
 import kotlinx.android.synthetic.main.fragment_device_list.toolbar
 import kotlinx.android.synthetic.main.fragment_device_list.viewLoading
 import kotlinx.android.synthetic.main.view_string_picker.view.*
-import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -38,14 +37,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     private val viewModel by viewModels<DeviceListViewModel>()
     private lateinit var searchView: SearchView
 
-    @Inject
-    lateinit var deviceListAdapter: DeviceListAdapter
+    @Inject lateinit var deviceListAdapter: DeviceListAdapter
 
-    @Inject
-    lateinit var resolutionListAdapter: CheckBoxListAdapter
+    @Inject lateinit var resolutionListAdapter: CheckBoxListAdapter
 
-    @Inject
-    lateinit var versionListAdapter: CheckBoxListAdapter
+    @Inject lateinit var versionListAdapter: CheckBoxListAdapter
 
     private var chooseResolutionDialog: Dialog? = null
     private var chooseVersionDialog: Dialog? = null
@@ -56,16 +52,29 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     private var angle = 180f
     private var filtersExpanded = false
 
+    private var mode = DeviceListAdapter.DeviceListMode.ROW
+
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         toolbar.inflateMenu(R.menu.menu_devicelist)
 
         searchView = (toolbar.menu.findItem(R.id.actionSearch).actionView as SearchView)
         searchView.maxWidth = Int.MAX_VALUE
+        if (searchView.isFocused) {
+            showSoftKeyboard(searchView)
+        }
 
         buttonRetry.setOnClickListener {
             makeDevicesRequest()
         }
 
+        val layoutManager = if (mode == DeviceListAdapter.DeviceListMode.TILE) {
+            recyclerViewDevices.addItemDecoration(HolderDecorator(8.dpToPx()))
+            GridLayoutManager(requireContext(), resources.getInteger(R.integer.device_details_column_count_tile))
+        } else {
+            recyclerViewDevices.addItemDecoration(HolderDecorator(4.dpToPx()))
+            GridLayoutManager(requireContext(), resources.getInteger(R.integer.device_details_column_count_row))
+        }
+        recyclerViewDevices.layoutManager = layoutManager
         recyclerViewDevices.adapter = deviceListAdapter
 
         layoutFiltering.setOnClickListener {
@@ -90,30 +99,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         }
 
         refreshActionButtons()
-    }
-
-    override fun onCodeRecognized(code: String) {
-        val entity = viewModel.handleCode(code)
-        if (entity != null && entity is User) {
-            showRFIDMessage(getString(R.string.user_list_choose_owner, entity.fullName()))
-            deviceListAdapter.currentUserId = entity.id
-        } else if (entity is Device) {
-            deviceListAdapter.selectByCode(entity)
-            showRFIDMessage(entity.detailedName())
-        } else {
-            showSnackbar(getString(R.string.common_card))
-        }
-        refreshActionButtons()
-    }
-
-    override fun setRFIDButtonElevation(value: Int) {
-        super.setRFIDButtonElevation(80)
-    }
-
-    override fun onBindViewModel() {
-        makeDevicesRequest()
-
-        recyclerViewDevices.addItemDecoration(HolderDecorator(8.dpToPx()))
 
         buttonResetUser.setOnClickListener {
             viewModel.userId = 0
@@ -139,10 +124,10 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             }
         }
 
-        deviceListAdapter.onItemUnselected = {
+        deviceListAdapter.onItemUnselected = { device ->
             showSelectionInToolbar()
-            it?.let {
-                viewModel.handleUnselection(it)
+            device?.let {
+                viewModel.handleUnselection(device)
             }
         }
 
@@ -153,17 +138,39 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         buttonTakeOrReturn.setOnClickListener {
             viewModel.takeOrReturnDevices(deviceListAdapter.getSelectedDevices())
         }
+    }
+
+    override fun onCodeRecognized(code: String) {
+        val entity = viewModel.handleCode(code)
+        if (entity != null && entity is User) {
+            showRFIDMessage(getString(R.string.user_list_choose_owner, entity.fullName()))
+            deviceListAdapter.currentUserId = entity.id
+        } else if (entity is Device) {
+            deviceListAdapter.selectByCode(entity)
+            showRFIDMessage(entity.detailedName(requireContext()))
+        } else {
+            showSnackbar(getString(R.string.common_card))
+        }
+        refreshActionButtons()
+    }
+
+    override fun setRFIDButtonElevation(value: Int) {
+        super.setRFIDButtonElevation(80)
+    }
+
+    override fun onBindViewModel() {
+        makeDevicesRequest()
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                viewModel.setQuery(it)
-            }
+                .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                    viewModel.setQuery(it)
+                }
     }
 
     override fun observeOperations() {
-        observe(viewModel.getUsersOperation) {
-            handleGetDevicesState(combineStates(listOf(it.state, viewModel.getDevicesOperation.value?.state)))
-            it.doOnSuccess { userInfo ->
+        observe(viewModel.getUsersOperation) { operation ->
+            handleGetDevicesState(combineStates(listOf(operation.state, viewModel.getDevicesOperation.value?.state)))
+            operation.doOnSuccess { userInfo ->
                 handleInfo(userInfo, viewModel.deviceListLiveData.value ?: emptyList())
             }
         }
@@ -185,10 +192,9 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         observe(viewModel.selectionValue) { selection ->
             if (selection.toBeTaken > 0 && selection.toBeReturned > 0) {
-                buttonTakeOrReturn.text =
-                    getString(R.string.device_list_take_n, selection.toBeTaken.toString()) +
-                            ", " +
-                            getString(R.string.device_list_return_n, selection.toBeReturned.toString())
+                buttonTakeOrReturn.text = getString(R.string.device_list_take_and_return,
+                        selection.toBeTaken.toString(),
+                        selection.toBeReturned.toString())
             } else if (selection.toBeTaken > 0) {
                 buttonTakeOrReturn.text = getString(R.string.device_list_take_n, selection.toBeTaken.toString())
             } else if (selection.toBeReturned > 0) {
@@ -198,19 +204,6 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         observe(viewModel.moveDevicesOperation) {
             handleMoveDeviceState(it.state)
-        }
-
-        showRFIDMessage("165516")
-    }
-
-    override fun onKeyboardHeightChanged(value: Int) {
-        if (value != -1) {
-            hideBottomNavigation()
-        } else {
-            GlobalScope.launch(context = Dispatchers.Main) {
-                delay(50)
-                showBottomNavigation()
-            }
         }
     }
 
@@ -335,15 +328,15 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         radioButtonIOS.isChecked = filter.os == OS_IOS
 
         resolutionListAdapter.replaceItems(
-            filter.resolutionSet.toList(),
-            filter.selectedResolutionSet.toList(),
-            filter.os
+                filter.resolutionSet.toList(),
+                filter.selectedResolutionSet.toList(),
+                filter.os
         )
 
         versionListAdapter.replaceItems(
-            filter.versionSet.toList(),
-            filter.selectedVersionSet.toList(),
-            filter.os
+                filter.versionSet.toList(),
+                filter.selectedVersionSet.toList(),
+                filter.os
         )
 
         deviceListAdapter.applyFilter(filter, viewModel.queryLiveData.value ?: "")
@@ -361,12 +354,12 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     private fun createChooseResolutionDialog(): Dialog? {
         activity?.let { context ->
             if (chooseResolutionDialog == null) {
-                val chooseConverterView = LayoutInflater.from(context)
-                    .inflate(R.layout.view_string_picker, null)
+                val chooseResolutionView = LayoutInflater.from(context)
+                        .inflate(R.layout.view_string_picker, null)
 
-                with(chooseConverterView) {
+                with(chooseResolutionView) {
                     resolutionListAdapter.selectedSet =
-                        viewModel.filterParameters.selectedResolutionSet
+                            viewModel.filterParameters.selectedResolutionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -377,11 +370,16 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                         viewModel.setResolutionList(resolutionListAdapter.selectedSet)
                         chooseResolutionDialog?.dismiss()
                     }
-
+                    buttonCheckAll.setOnClickListener {
+                        resolutionListAdapter.selectOrRemoveSelection()
+                    }
+                    chooseResolutionView.post {
+                        chooseResolutionView.scrollViewStringPicker.scrollTo(0,0)
+                    }
                     chooseResolutionDialog = Dialog(context, R.style.DialogTheme).apply {
                         setCancelable(true)
                         setCanceledOnTouchOutside(true)
-                        setContentView(chooseConverterView)
+                        setContentView(chooseResolutionView)
                     }
                 }
             }
@@ -394,11 +392,11 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         activity?.let { context ->
             if (chooseVersionDialog == null) {
                 val chooseVersionView = LayoutInflater.from(context)
-                    .inflate(R.layout.view_string_picker, null)
+                        .inflate(R.layout.view_string_picker, null)
 
                 with(chooseVersionView) {
                     versionListAdapter.selectedSet =
-                        viewModel.filterParameters.selectedVersionSet
+                            viewModel.filterParameters.selectedVersionSet
                     recyclerViewChooseString.apply {
                         layoutManager = LinearLayoutManager(context)
                         isNestedScrollingEnabled = false
@@ -408,6 +406,12 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                     buttonApply.setOnClickListener {
                         viewModel.setOsList(versionListAdapter.selectedSet)
                         chooseVersionDialog?.dismiss()
+                    }
+                    buttonCheckAll.setOnClickListener {
+                        versionListAdapter.selectOrRemoveSelection()
+                    }
+                    chooseVersionView.post {
+                        chooseVersionView.scrollViewStringPicker.scrollTo(0,0)
                     }
 
                     chooseVersionDialog = Dialog(context, R.style.DialogTheme).apply {

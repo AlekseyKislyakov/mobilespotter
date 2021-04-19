@@ -11,6 +11,7 @@
     <string name="common_ios">iOS</string>
     <string name="common_cancel">Отмена</string>
     <string name="common_ok">Ок</string>
+    <string name="common_check_all">Выбрать все</string>
     <string name="common_search_parameters">Параметры поиска</string>
     <string name="common_resolution">Разрешение</string>
     <string name="common_choose">Выбрать…</string>
@@ -18,6 +19,9 @@
     <string name="common_retry_request">Повторить</string>
     <string name="common_not_defined">Не указан</string>
     <string name="common_navigate">Перейти</string>
+    <string name="common_whitespace_separator">%s %s</string>
+    <string name="common_whitespace_double_separator">%s %s %s</string>
+    <string name="common_whitespace_brackets_separator">%s (%s)</string>
 
     <!--    departments-->
     <string name="android">Android</string>
@@ -37,7 +41,7 @@
     <string name="device_list_only_organization">Не показывать личные устройства</string>
     <string name="device_list_only_my">Только взятые мной устройства</string>
     <string name="device_list_free">Свободен</string>
-    <string name="device_list_busy">Занят. Арендатор - %s</string>
+    <string name="device_list_busy">%s</string>
     <string name="device_list_choose_value">Выберите значение</string>
     <string name="device_list_os_version">Версия ОС</string>
     <string name="device_list">Список устройств</string>
@@ -84,6 +88,7 @@
 
     <string name="device_list_take_n">Взять %s</string>
     <string name="device_list_return_n">Вернуть %s</string>
+    <string name="device_list_take_and_return">Взять %s, вернуть %s</string>
     <string name="common_comma_separator">,&#32;</string>
     <string name="device_list_user_reset">Пользователь сброшен</string>
     <string name="device_list_success">Устройства успешно назначены</string>

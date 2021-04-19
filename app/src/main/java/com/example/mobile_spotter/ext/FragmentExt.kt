@@ -1,7 +1,5 @@
 package com.example.mobile_spotter.ext
 
-import android.content.Context
-import android.content.res.Resources
 import android.graphics.Rect
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -12,9 +10,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.activity_main.*
 import com.example.mobile_spotter.MainActivity
 import com.example.mobile_spotter.R
@@ -27,20 +22,20 @@ fun Fragment.getColor(@ColorRes color: Int): Int {
     return ResourcesCompat.getColor(resources, color, null)
 }
 
-fun Fragment.showKeyboard() {
-    activity?.getSystemService(Context.INPUT_METHOD_SERVICE)?.let {
-        (it as InputMethodManager).run {
-            toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0)
-        }
-    }
+fun Fragment.hideSoftKeyboard() {
+    activity?.hideSoftKeyboard()
 }
 
-fun Fragment.hideKeyboard(view: View) {
-    activity?.getSystemService(Context.INPUT_METHOD_SERVICE)?.let {
-        (it as InputMethodManager).run {
-            hideSoftInputFromWindow(view.windowToken, 0)
-        }
-    }
+fun Fragment.hideSoftKeyboard(view: View) {
+    activity?.hideSoftKeyboard(view)
+}
+
+fun Fragment.showSoftKeyboard(showFlags: Int = InputMethodManager.SHOW_FORCED, hideFlags: Int = 0) {
+    activity?.showSoftKeyboard(showFlags, hideFlags)
+}
+
+fun Fragment.showSoftKeyboard(view: View, showFlags: Int = 0) {
+    activity?.showSoftKeyboard(view, showFlags)
 }
 
 inline val FragmentManager.currentFragment: Fragment?

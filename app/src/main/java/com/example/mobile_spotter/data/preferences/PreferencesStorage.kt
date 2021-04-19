@@ -1,22 +1,16 @@
 package com.example.mobile_spotter.data.preferences
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.mobile_spotter.data.remote.USER_TOKEN
-import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 @Singleton
 class PreferencesStorage @Inject constructor(
     application: Application
 ) {
-
     companion object {
         const val PREF_FILE_NAME = "pref_file"
 

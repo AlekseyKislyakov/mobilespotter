@@ -1,23 +1,19 @@
 package com.example.mobile_spotter.presentation.userlist
 
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.ext.*
 import com.example.mobile_spotter.presentation.base.BaseFragment
-import com.example.mobile_spotter.presentation.devicelist.DeviceListFragmentDirections
 import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.HEADER_VIEW_TYPE
 import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.USER_VIEW_TYPE
-import com.example.mobile_spotter.utils.HolderDecorator
 import com.example.mobile_spotter.utils.OpState
 import com.example.mobile_spotter.utils.StickyHolderDecorator
 import com.jakewharton.rxbinding4.appcompat.navigationClicks
@@ -57,7 +53,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
             makeUsersRequest()
         }
 
-        val spanCount = resources.getInteger(R.integer.device_details_column_count)
+        val spanCount = resources.getInteger(R.integer.device_details_column_count_tile)
 
         if(spanCount == SINGLE_COLUMN) {
             recyclerViewUsers.layoutManager = StickyLayoutManager(context, userListAdapter)

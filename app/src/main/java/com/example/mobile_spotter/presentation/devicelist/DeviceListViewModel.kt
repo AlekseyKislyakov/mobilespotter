@@ -1,5 +1,6 @@
 package com.example.mobile_spotter.presentation.devicelist
 
+import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -183,13 +184,13 @@ class DeviceListViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             progressive {
                 getDevicesUseCase.execute()
-            }.collect {
-                getDevicesOperation.postValue(it)
-                it.doOnSuccess {
+            }.collect { operation ->
+                getDevicesOperation.postValue(operation)
+                operation.doOnSuccess { devices ->
                     deviceList.clear()
-                    deviceList.addAll(it)
+                    deviceList.addAll(devices)
 
-                    deviceListLiveData.postValue(it)
+                    deviceListLiveData.postValue(devices)
                     makeUsersRequest()
                 }
             }
@@ -200,11 +201,11 @@ class DeviceListViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             progressive {
                 getUsersUseCase.execute()
-            }.collect {
-                getUsersOperation.value = it
-                it.doOnSuccess {
+            }.collect { operation ->
+                getUsersOperation.value = operation
+                operation.doOnSuccess { users ->
                     userList.clear()
-                    userList.addAll(it)
+                    userList.addAll(users)
 
                     if (initialRequest) {
                         fillFilterValue()
