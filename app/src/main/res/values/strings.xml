@@ -7,12 +7,12 @@
     <!--    common-->
     <string name="common_empty">Ничего не найдено :(</string>
     <string name="common_all">Все</string>
-    <string name="common_android">Android</string>
-    <string name="common_ios">iOS</string>
+    <string name="common_android">Только Android</string>
+    <string name="common_ios">Только iOS</string>
     <string name="common_cancel">Отмена</string>
     <string name="common_ok">Ок</string>
     <string name="common_check_all">Выбрать все</string>
-    <string name="common_search_parameters">Параметры поиска</string>
+    <string name="common_search_parameters">Настройки</string>
     <string name="common_resolution">Разрешение</string>
     <string name="common_choose">Выбрать…</string>
     <string name="common_rfid_put_card">Приложите RFID-чип к считывателю</string>

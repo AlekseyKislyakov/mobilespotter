@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:theme="@style/AppTheme">
+    android:theme="@style/AppTheme"
+    android:animateLayoutChanges="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -27,12 +28,14 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:animateLayoutChanges="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/extremely_light_gray">
+            android:background="@color/extremely_light_gray"
+            android:animateLayoutChanges="true">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -76,18 +79,113 @@
                     android:visibility="gone"
                     tools:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/textViewOrderingRules"
+                    <com.google.android.flexbox.FlexboxLayout
+                        android:id="@+id/flexboxLayoutFiltering"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingStart="16dp"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="16dp"
-                        android:paddingBottom="16dp"
-                        android:text="Порядок отображения"
-                        android:textSize="17sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:flexWrap="wrap"
+                        app:alignItems="stretch"
+                        app:alignContent="stretch">
+
+                        <LinearLayout
+                            android:id="@+id/layoutMainOrdering"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="24dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textViewOrderingAsIs"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="Как с сервера"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:layout_gravity="center" />
+
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:id="@+id/switchOrdering"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:id="@+id/textViewOrderingAlphabetical"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="По версии"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:layout_gravity="center"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutAlphabeticalOrdering"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="24dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textViewOrderingIncreasing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="По возрастанию"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:id="@+id/switchIncreasingDecreasing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+
+                            <TextView
+                                android:id="@+id/textViewOrderingDecreasing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="По убыванию"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layoutViewMode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="24dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="Строками"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:layout_gravity="center" />
+
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:id="@+id/switchViewMode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="16dp"
+                                android:text="Плиткой"
+                                android:textColor="@color/black"
+                                android:textSize="17sp"
+                                android:layout_gravity="center"/>
+                        </LinearLayout>
+                    </com.google.android.flexbox.FlexboxLayout>
 
                     <RadioButton
                         android:id="@+id/radioButtonAll"
@@ -95,18 +193,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:paddingBottom="4dp"
+                        android:textSize="17sp"
                         android:text="@string/common_all"
-                        app:layout_constraintEnd_toStartOf="@id/radioButtonAndroid"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintHorizontal_chainStyle="spread_inside"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewOrderingRules" />
+                        app:layout_constraintTop_toBottomOf="@+id/flexboxLayoutFiltering" />
 
                     <RadioButton
                         android:id="@+id/radioButtonAndroid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/common_android"
+                        android:textSize="17sp"
                         app:layout_constraintEnd_toStartOf="@id/radioButtonIOS"
                         app:layout_constraintStart_toEndOf="@id/radioButtonAll"
                         app:layout_constraintTop_toTopOf="@+id/radioButtonAll" />
@@ -115,9 +213,9 @@
                         android:id="@+id/radioButtonIOS"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="24dp"
                         android:text="@string/common_ios"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/flexboxLayoutFiltering"
                         app:layout_constraintStart_toEndOf="@id/radioButtonAndroid"
                         app:layout_constraintTop_toTopOf="@+id/radioButtonAll" />
 

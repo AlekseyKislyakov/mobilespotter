@@ -96,4 +96,7 @@ dependencies {
 
     // rxbinding
     implementation 'com.jakewharton.rxbinding4:rxbinding-appcompat:4.0.0'
+
+    // flexboxlayout
+    implementation 'com.google.android:flexbox:2.0.1'
 }

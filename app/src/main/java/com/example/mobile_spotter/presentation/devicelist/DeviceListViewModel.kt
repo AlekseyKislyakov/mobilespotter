@@ -1,6 +1,5 @@
 package com.example.mobile_spotter.presentation.devicelist
 
-import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -70,6 +69,20 @@ class DeviceListViewModel @ViewModelInject constructor(
             os = type
             selectedResolutionSet = resolutionSet.toMutableSet()
             selectedVersionSet = versionSet.toMutableSet()
+        }
+        refreshFilters.value = Unit
+    }
+
+    fun setMainOrdering(type: String) {
+        filterParameters.apply {
+            orderingMain = type
+        }
+        refreshFilters.value = Unit
+    }
+
+    fun setAlphabeticalOrdering(type: String) {
+        filterParameters.apply {
+            orderingAlphabetical = type
         }
         refreshFilters.value = Unit
     }

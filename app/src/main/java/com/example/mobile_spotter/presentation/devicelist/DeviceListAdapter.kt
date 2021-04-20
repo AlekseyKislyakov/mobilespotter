@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.ext.*
+import com.example.mobile_spotter.utils.applyFilterOnBackground
 import kotlinx.android.synthetic.main.item_device_list_row.view.*
 import kotlinx.android.synthetic.main.item_device_list_tile.view.*
+import kotlinx.coroutines.runBlocking
 import java.util.*
 import javax.inject.Inject
 
@@ -63,7 +65,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(mode) {
+        return when (mode) {
             DeviceListMode.TILE -> DEVICE_VIEW_TYPE_TILE
             DeviceListMode.ROW -> DEVICE_VIEW_TYPE_ROW
         }
@@ -78,14 +80,10 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         }
 
         filteredDevices.clear()
-        filteredDevices.addAll(deviceData.asSequence()
-                .filter { filter.os == OS_ALL || it.device.osType.toLowerCase(Locale.ROOT) == filter.os }
-                .filter { filter.selectedResolutionSet.contains(it.device.detailedResolution()) }
-                .filter { filter.selectedVersionSet.contains(it.device.detailedVersion()) }
-                .filter { !filter.onlyAvailable || it.owner == null }
-                .filter { !filter.nonPrivate || !it.device.private }.toList()
-                .filter { !filter.onlyMine || it.owner?.id == currentUserId }
-                .filter { it.device.name.containsNoCase(query) || it.device.nickname.containsNoCase(query) })
+        val resultData = runBlocking { applyFilterOnBackground(deviceData, filter, currentUserId, query) }
+        filteredDevices.addAll(resultData)
+
+
         clearSelection()
         if (filteredDevices.isEmpty() && deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(true)
@@ -141,7 +139,7 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
 
         private val cardDeviceList = itemView.cardDeviceListTile
 
-        private val imageViewDeviceAvatar = itemView.imageViewDeviceAvatarRow
+        private val imageViewDeviceAvatar = itemView.imageViewDeviceAvatarTile
 
         fun bind(data: FullDeviceInfo) {
             if (data.selected) {
@@ -161,10 +159,10 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
 
             if (data.owner == null) {
                 textViewStatus.text = itemView.context.getString(R.string.device_list_free)
-                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_green,null))
+                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_green, null))
             } else {
                 textViewStatus.text = itemView.context.getString(R.string.device_list_busy, data.owner.fullName())
-                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_red,null))
+                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_red, null))
             }
 
             itemView.setOnClickListener {
@@ -222,10 +220,10 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
 
             if (data.owner == null) {
                 textViewStatus.text = itemView.context.getString(R.string.device_list_free)
-                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_green,null))
+                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_green, null))
             } else {
                 textViewStatus.text = itemView.context.getString(R.string.device_list_busy, data.owner.fullName())
-                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_red,null))
+                textViewStatus.setTextColor(ResourcesCompat.getColor(itemView.resources, R.color.soft_red, null))
             }
 
             itemView.setOnClickListener {
