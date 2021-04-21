@@ -94,5 +94,11 @@
     <string name="device_list_success">Устройства успешно назначены</string>
     <string name="common_unknown_card">Неизвестная карта</string>
     <string name="common_network_error">Ошибка загрузки данных</string>
+    <string name="device_list_as_from_server">Как с сервера</string>
+    <string name="device_list_by_version">По версии</string>
+    <string name="device_list_increasing">По возрастанию</string>
+    <string name="device_list_decreasing">По убыванию</string>
+    <string name="device_list_by_strings">Строками</string>
+    <string name="device_list_by_tiles">Плиткой</string>
 
 </resources>

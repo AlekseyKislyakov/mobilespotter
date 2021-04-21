@@ -2,16 +2,23 @@ package com.example.mobile_spotter.presentation.userlist
 
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.brandongogetap.stickyheaders.StickyLayoutManager
 import com.example.mobile_spotter.R
 import com.example.mobile_spotter.data.entities.*
 import com.example.mobile_spotter.ext.*
 import com.example.mobile_spotter.presentation.base.BaseFragment
+import com.example.mobile_spotter.presentation.devicedetails.DeviceDetailsFragmentArgs
+import com.example.mobile_spotter.presentation.devicelist.DeviceListFragment
+import com.example.mobile_spotter.presentation.devicelist.DeviceListFragment.Companion.DEVICE_LIST_REQUEST
+import com.example.mobile_spotter.presentation.devicelist.DeviceListFragment.Companion.EXTRA_SELECTED_LIST
 import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.HEADER_VIEW_TYPE
 import com.example.mobile_spotter.presentation.userlist.UserListAdapter.Companion.USER_VIEW_TYPE
 import com.example.mobile_spotter.utils.OpState
@@ -29,22 +36,31 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
-
-    val SINGLE_COLUMN = 1
+    companion object {
+        const val SINGLE_COLUMN = 1
+    }
 
     private val viewModel by viewModels<UserListViewModel>()
+    private val args: UserListFragmentArgs by navArgs()
     private lateinit var searchView: SearchView
 
-    @Inject
-    lateinit var userListAdapter: UserListAdapter
+    @Inject lateinit var userListAdapter: UserListAdapter
 
-    @Inject
-    lateinit var sectionListAdapter: SectionListAdapter
+    @Inject lateinit var sectionListAdapter: SectionListAdapter
 
     override val showFloatingActionButton = true
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         toolbar.inflateMenu(R.menu.menu_userlist)
+
+        if (args.deviceList?.isNotEmpty() == true) {
+            setFragmentResult(
+                DEVICE_LIST_REQUEST,
+                bundleOf(
+                    EXTRA_SELECTED_LIST to args.deviceList
+                )
+            )
+        }
 
         searchView = (toolbar.menu.findItem(R.id.actionSearch).actionView as SearchView)
         searchView.maxWidth = Int.MAX_VALUE
@@ -55,7 +71,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
 
         val spanCount = resources.getInteger(R.integer.device_details_column_count_tile)
 
-        if(spanCount == SINGLE_COLUMN) {
+        if (spanCount == SINGLE_COLUMN) {
             recyclerViewUsers.layoutManager = StickyLayoutManager(context, userListAdapter)
             coordinatorLayout.setBackgroundColor(getColor((R.color.white)))
         } else {
@@ -86,9 +102,9 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         }
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                    viewModel.setQuery(it)
-                }
+            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                viewModel.setQuery(it)
+            }
 
         userListAdapter.onUserClickListener = {
             viewModel.selectUser(it)
@@ -121,9 +137,7 @@ class UserListFragment : BaseFragment(R.layout.fragment_user_list) {
         }
     }
 
-    override fun onKeyboardHeightChanged(value: Int) {
-
-    }
+    override fun onKeyboardHeightChanged(value: Int) {}
 
     override fun onCodeRecognized(code: String) {
         val entity = viewModel.handleCode(code)

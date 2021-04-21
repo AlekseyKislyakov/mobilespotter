@@ -305,7 +305,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             }
 
             layoutUserName.setOnClickListener {
-                findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment())
+                findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment(null))
             }
 
             // check owner and create listener to open telegram
@@ -373,7 +373,7 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                 buttonTakeDeviceGeneral.isEnabled = false
                 buttonReturnDeviceGeneral.isEnabled = false
                 showActionSnackbar(getString(R.string.device_details_user_not_defined)) {
-                    findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment())
+                    findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment(null))
                 }
             }
         }

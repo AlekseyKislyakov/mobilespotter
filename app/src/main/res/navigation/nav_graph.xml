@@ -13,7 +13,12 @@
         <action
             android:id="@+id/action_userList_to_DeviceListFragment"
             app:destination="@id/deviceListFragment"
-            app:popUpTo="@+id/nav_graph"/>
+            app:popUpTo="@+id/nav_graph" />
+
+        <argument
+            android:name="deviceList"
+            app:argType="integer[]"
+            app:nullable="true" />
     </fragment>
 
     <fragment

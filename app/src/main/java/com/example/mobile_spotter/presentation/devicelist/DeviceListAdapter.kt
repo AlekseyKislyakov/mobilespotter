@@ -83,7 +83,6 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
         val resultData = runBlocking { applyFilterOnBackground(deviceData, filter, currentUserId, query) }
         filteredDevices.addAll(resultData)
 
-
         clearSelection()
         if (filteredDevices.isEmpty() && deviceData.isNotEmpty()) {
             onEmptyListAction.invoke(true)
@@ -118,6 +117,17 @@ class DeviceListAdapter @Inject constructor() : RecyclerView.Adapter<RecyclerVie
                 it.selected = true
                 selectedCount++
                 onItemSelected.invoke(device)
+            }
+        }
+        notifyDataSetChanged()
+    }
+
+    fun selectById(intArray: IntArray) {
+        filteredDevices.forEach { deviceInfo ->
+            if (!deviceInfo.selected && intArray.contains(deviceInfo.device.id)) {
+                deviceInfo.selected = true
+                selectedCount++
+                onItemSelected.invoke(deviceInfo.device)
             }
         }
         notifyDataSetChanged()

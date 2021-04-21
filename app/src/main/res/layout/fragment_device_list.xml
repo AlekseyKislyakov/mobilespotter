@@ -100,7 +100,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:text="Как с сервера"
+                                android:text="@string/device_list_as_from_server"
                                 android:textColor="@color/black"
                                 android:textSize="17sp"
                                 android:layout_gravity="center" />
@@ -116,7 +116,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:text="По версии"
+                                android:text="@string/device_list_by_version"
                                 android:textColor="@color/black"
                                 android:textSize="17sp"
                                 android:layout_gravity="center"/>
@@ -134,7 +134,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:text="По возрастанию"
+                                android:text="@string/device_list_increasing"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -148,7 +148,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:text="По убыванию"
+                                android:text="@string/device_list_decreasing"
                                 android:textColor="@color/black"
                                 android:textSize="17sp" />
 
@@ -165,7 +165,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:text="Строками"
+                                android:text="@string/device_list_by_strings"
                                 android:textColor="@color/black"
                                 android:textSize="17sp"
                                 android:layout_gravity="center" />
@@ -180,7 +180,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="16dp"
-                                android:text="Плиткой"
+                                android:text="@string/device_list_by_tiles"
                                 android:textColor="@color/black"
                                 android:textSize="17sp"
                                 android:layout_gravity="center"/>

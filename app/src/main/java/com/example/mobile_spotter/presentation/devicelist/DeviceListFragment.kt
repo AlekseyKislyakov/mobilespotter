@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -33,6 +34,10 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
+    companion object {
+        const val DEVICE_LIST_REQUEST = "device_list_request"
+        const val EXTRA_SELECTED_LIST = "extra_selected_list"
+    }
 
     private val viewModel by viewModels<DeviceListViewModel>()
     private lateinit var searchView: SearchView
@@ -94,7 +99,10 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         setupFilterFields()
         buttonChooseUser.setOnClickListener {
-            findNavController().navigate(DeviceListFragmentDirections.actionDeviceListFragmentToUserListFragment())
+            findNavController().navigate(
+                DeviceListFragmentDirections.actionDeviceListFragmentToUserListFragment(
+                    deviceListAdapter.getSelectedDevices().map { it.device.id }.toIntArray())
+            )
         }
 
         refreshActionButtons()
@@ -134,7 +142,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             emptyView.isVisible = it
         }
 
-        switchViewMode.setOnCheckedChangeListener { buttonView, isChecked ->
+        switchViewMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 deviceListAdapter.mode = DeviceListAdapter.DeviceListMode.TILE
                 mode = DeviceListAdapter.DeviceListMode.TILE
@@ -148,6 +156,10 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
         buttonTakeOrReturn.setOnClickListener {
             viewModel.takeOrReturnDevices(deviceListAdapter.getSelectedDevices())
+        }
+
+        setFragmentResultListener(DEVICE_LIST_REQUEST) { _, bundle ->
+            viewModel.setSelectedList(bundle.getIntArray(EXTRA_SELECTED_LIST))
         }
     }
 
@@ -170,11 +182,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     override fun onBindViewModel() {
-        if(deviceListAdapter.itemCount == 0) {
-            makeDevicesRequest()
-        } else {
-            recyclerViewDevices.isVisible = true
-        }
+        makeDevicesRequest()
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread()).subscribe {
@@ -288,31 +296,31 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     private fun setupFilterFields() {
-        switchOrdering.setOnCheckedChangeListener { buttonView, isChecked ->
+        switchOrdering.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 viewModel.setMainOrdering(ORDERING_BY_VERSION)
             } else {
                 viewModel.setMainOrdering(ORDERING_AS_IS)
             }
         }
-        switchIncreasingDecreasing.setOnCheckedChangeListener { buttonView, isChecked ->
+        switchIncreasingDecreasing.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 viewModel.setAlphabeticalOrdering(ORDERING_DECREASING)
             } else {
                 viewModel.setAlphabeticalOrdering(ORDERING_INCREASING)
             }
         }
-        radioButtonAll.setOnCheckedChangeListener { buttonView, isChecked ->
+        radioButtonAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 viewModel.setOsType(OS_ALL)
             }
         }
-        radioButtonAndroid.setOnCheckedChangeListener { buttonView, isChecked ->
+        radioButtonAndroid.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 viewModel.setOsType(OS_ANDROID)
             }
         }
-        radioButtonIOS.setOnCheckedChangeListener { buttonView, isChecked ->
+        radioButtonIOS.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 viewModel.setOsType(OS_IOS)
             }
@@ -326,15 +334,15 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
             createChooseOSVersionDialog()?.show()
         }
 
-        checkBoxNonPrivate.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxNonPrivate.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setPrivateType(isChecked)
         }
 
-        checkBoxOnlyFree.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxOnlyFree.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setFreeType(isChecked)
         }
 
-        checkBoxOnlyMine.setOnCheckedChangeListener { buttonView, isChecked ->
+        checkBoxOnlyMine.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setOnlyMine(isChecked)
         }
     }
@@ -379,6 +387,8 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     private fun handleInfo(userList: List<User>, deviceList: List<Device>) {
         deviceListAdapter.applyData(userList, deviceList)
+        viewModel.selectionArray.value?.let { deviceListAdapter.selectById(it) }
+        viewModel.setSelectedList(null)
         deviceListAdapter.currentUserId = viewModel.userId ?: 0
     }
 

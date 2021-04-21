@@ -39,6 +39,8 @@ class DeviceListViewModel @ViewModelInject constructor(
 
     val selectionValue = MutableLiveData<SelectionValue>()
 
+    val selectionArray = MutableLiveData<IntArray?>()
+
     var filterParameters = DeviceFilter()
     var initialRequest = true
 
@@ -173,7 +175,10 @@ class DeviceListViewModel @ViewModelInject constructor(
             }
             selectionValue.postValue(selection)
         }
+    }
 
+    fun setSelectedList(intArray: IntArray?) {
+        selectionArray.postValue(intArray)
     }
 
     fun handleUnselection(device: Device) {

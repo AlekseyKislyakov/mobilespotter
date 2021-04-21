@@ -30,7 +30,7 @@ class SettingsFragment : BaseFragment(R.layout.fragment_settings) {
 
     override fun onSetupLayout(savedInstanceState: Bundle?) {
         layoutUserName.setOnClickListener {
-            findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToUserListFragment())
+            findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToUserListFragment(null))
         }
 
         layoutPublicAccount.setOnClickListener {
