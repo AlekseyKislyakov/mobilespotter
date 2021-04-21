@@ -150,6 +150,7 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
                 deviceListAdapter.mode = DeviceListAdapter.DeviceListMode.ROW
                 mode = DeviceListAdapter.DeviceListMode.ROW
             }
+            viewModel.viewMode = isChecked
             refreshRecyclerViewParams()
             deviceListAdapter.notifyDataSetChanged()
         }
@@ -182,6 +183,12 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
     }
 
     override fun onBindViewModel() {
+        switchOrdering.isChecked = viewModel.mainSorting ?: false
+        handleMainOrdering(switchOrdering.isChecked)
+        switchIncreasingDecreasing.isChecked = viewModel.alphabeticalSorting ?: false
+        handleAlphabeticalOrdering(switchIncreasingDecreasing.isChecked)
+        switchViewMode.isChecked = viewModel.viewMode ?: false
+
         makeDevicesRequest()
 
         searchView.queryTextChanges().debounce(100, TimeUnit.MILLISECONDS)
@@ -297,18 +304,12 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
 
     private fun setupFilterFields() {
         switchOrdering.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                viewModel.setMainOrdering(ORDERING_BY_VERSION)
-            } else {
-                viewModel.setMainOrdering(ORDERING_AS_IS)
-            }
+            handleMainOrdering(isChecked)
+            viewModel.mainSorting = isChecked
         }
         switchIncreasingDecreasing.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                viewModel.setAlphabeticalOrdering(ORDERING_DECREASING)
-            } else {
-                viewModel.setAlphabeticalOrdering(ORDERING_INCREASING)
-            }
+            handleAlphabeticalOrdering(isChecked)
+            viewModel.alphabeticalSorting = isChecked
         }
         radioButtonAll.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -465,6 +466,22 @@ class DeviceListFragment : BaseFragment(R.layout.fragment_device_list) {
         }
 
         return chooseVersionDialog
+    }
+
+    private fun handleMainOrdering(isChecked: Boolean) {
+        if (isChecked) {
+            viewModel.setMainOrdering(ORDERING_BY_VERSION)
+        } else {
+            viewModel.setMainOrdering(ORDERING_AS_IS)
+        }
+    }
+
+    private fun handleAlphabeticalOrdering(isChecked: Boolean) {
+        if (isChecked) {
+            viewModel.setAlphabeticalOrdering(ORDERING_DECREASING)
+        } else {
+            viewModel.setAlphabeticalOrdering(ORDERING_INCREASING)
+        }
     }
 
     private fun refreshRecyclerViewParams() {

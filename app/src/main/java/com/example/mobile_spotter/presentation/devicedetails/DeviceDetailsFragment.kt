@@ -103,16 +103,20 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
         buttonRetry.setOnClickListener {
             makeDevicesRequest()
         }
+        buttonResetUser.setOnClickListener {
+            findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment(null))
+        }
     }
 
     override fun onBindViewModel() {
-        if (viewModel.isPublic == true) {
+        // не используется для планшета
+//        if (viewModel.isPublic == true) {
             layoutGeneralActions.isVisible = true
             layoutPrivateActions.isGone = true
-        } else {
-            layoutGeneralActions.isGone = true
-            layoutPrivateActions.isVisible = true
-        }
+//        } else {
+//            layoutGeneralActions.isGone = true
+//            layoutPrivateActions.isVisible = true
+//        }
         makeDevicesRequest()
 
         buttonTakeDevice.setOnClickListener {
@@ -335,9 +339,9 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
                     buttonTakeDevice.isEnabled = false
                     buttonTakeDeviceGeneral.isEnabled = false
                 } else {
-                    owner?.let { owner ->
+                    owner?.let {
                         textViewDeviceStatus.text =
-                            getString(R.string.device_list_busy, owner.fullName())
+                            getString(R.string.device_details_busy, owner.fullName())
                         imageViewTelegramIcon.isVisible = true
                         textViewDeviceStatus.isClickable = true
                         buttonReturnDevice.isEnabled = false
@@ -368,13 +372,11 @@ class DeviceDetailsFragment : BaseFragment(R.layout.fragment_device_details) {
             }
 
             if (currentUser == null) {
-                buttonTakeDevice.isEnabled = false
-                buttonReturnDevice.isEnabled = false
-                buttonTakeDeviceGeneral.isEnabled = false
-                buttonReturnDeviceGeneral.isEnabled = false
-                showActionSnackbar(getString(R.string.device_details_user_not_defined)) {
-                    findNavController().navigate(DeviceDetailsFragmentDirections.actionDeviceListFragmentToUserListFragment(null))
-                }
+                buttonTakeDevice.isVisible = false
+                buttonReturnDevice.isVisible = false
+                buttonTakeDeviceGeneral.isVisible = false
+                buttonReturnDeviceGeneral.isVisible = false
+                buttonResetUser.isVisible = true
             }
         }
     }

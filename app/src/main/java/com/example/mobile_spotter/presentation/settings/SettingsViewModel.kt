@@ -16,11 +16,15 @@ import com.example.mobile_spotter.domain.usecase.TakeDeviceUseCase
 import com.example.mobile_spotter.presentation.base.BaseViewModel
 import com.example.mobile_spotter.utils.LongOperation
 import com.example.mobile_spotter.utils.progressive
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
     private val getUsersUseCase: GetUsersUseCase,
     private val preferencesStorage: PreferencesStorage
 ) : BaseViewModel() {

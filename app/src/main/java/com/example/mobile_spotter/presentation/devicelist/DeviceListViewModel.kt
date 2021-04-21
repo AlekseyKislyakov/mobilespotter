@@ -14,10 +14,14 @@ import com.example.mobile_spotter.ext.detailedResolution
 import com.example.mobile_spotter.ext.detailedVersion
 import com.example.mobile_spotter.presentation.base.BaseViewModel
 import com.example.mobile_spotter.utils.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DeviceListViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DeviceListViewModel @Inject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val preferencesStorage: PreferencesStorage,
@@ -51,6 +55,24 @@ class DeviceListViewModel @ViewModelInject constructor(
         get() = preferencesStorage.userId
         set(value) {
             preferencesStorage.userId = value
+        }
+
+    var mainSorting: Boolean?
+        get() = preferencesStorage.mainSorting
+        set(value) {
+            preferencesStorage.mainSorting = value
+        }
+
+    var alphabeticalSorting: Boolean?
+        get() = preferencesStorage.alphabeticalSorting
+        set(value) {
+            preferencesStorage.alphabeticalSorting = value
+        }
+
+    var viewMode: Boolean?
+        get() = preferencesStorage.viewMode
+        set(value) {
+            preferencesStorage.viewMode = value
         }
 
     fun getDevices() {
@@ -235,7 +257,7 @@ class DeviceListViewModel @ViewModelInject constructor(
     }
 
     private fun fillFilterValue() {
-        filterParameters = DeviceFilter(
+        filterParameters = filterParameters.copy(
             os = OS_ALL,
             versionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet() ?: mutableSetOf(),
             selectedVersionSet = deviceListLiveData.value?.map { it.detailedVersion() }?.toMutableSet()

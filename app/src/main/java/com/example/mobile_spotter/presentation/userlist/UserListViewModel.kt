@@ -11,10 +11,13 @@ import com.example.mobile_spotter.domain.usecase.GetUsersUseCase
 import com.example.mobile_spotter.presentation.base.BaseViewModel
 import com.example.mobile_spotter.utils.LongOperation
 import com.example.mobile_spotter.utils.progressive
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListViewModel @ViewModelInject constructor(
+@HiltViewModel
+class UserListViewModel @Inject constructor(
     private val getUsersUseCase: GetUsersUseCase,
     private val preferences: PreferencesStorage
 ) : BaseViewModel() {

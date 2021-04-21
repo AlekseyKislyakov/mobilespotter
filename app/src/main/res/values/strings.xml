@@ -60,6 +60,7 @@
     <string name="device_details_your_rent">Находится в Вашем пользовании</string>
     <string name="device_details_return">Вернуть</string>
     <string name="device_details_take">Взять</string>
+    <string name="device_details_busy">Занят. Арендатор - %s</string>
     <string name="device_details_take_device">Взять устройство</string>
     <string name="device_details_current_user">Текущий пользователь</string>
     <string name="device_details_taken">Устройство успешно взято</string>

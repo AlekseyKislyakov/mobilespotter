@@ -13,10 +13,14 @@ import com.example.mobile_spotter.domain.usecase.ReturnDeviceUseCase
 import com.example.mobile_spotter.presentation.base.BaseViewModel
 import com.example.mobile_spotter.utils.LongOperation
 import com.example.mobile_spotter.utils.progressive
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DeviceDetailsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class DeviceDetailsViewModel @Inject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val getUsersUseCase: GetUsersUseCase,
     private val takeDeviceUseCase: TakeDeviceUseCase,

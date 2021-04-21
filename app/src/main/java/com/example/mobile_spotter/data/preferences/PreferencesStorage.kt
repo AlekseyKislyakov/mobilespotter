@@ -18,6 +18,9 @@ class PreferencesStorage @Inject constructor(
         private const val KEY_USER_ID = "KEY_USER_ID"
         private const val KEY_PUBLIC_ACCOUNT = "KEY_PUBLIC_ACCOUNT"
         private const val KEY_TOKEN = "KEY_TOKEN"
+        private const val KEY_MAIN_SORTING = "KEY_MAIN_SORTING"
+        private const val KEY_ALPHABETICAL_SORTING = "KEY_ALPHABETICAL_SORTING"
+        private const val KEY_VIEW_MODE = "KEY_VIEW_MODE"
     }
 
     private val pref: SharedPreferences
@@ -48,5 +51,23 @@ class PreferencesStorage @Inject constructor(
         get() = pref.getString(KEY_TOKEN, USER_TOKEN)
         set(token) {
             pref.edit().putString(KEY_TOKEN, token).apply()
+        }
+
+    var mainSorting: Boolean?
+        get() = pref.getBoolean(KEY_MAIN_SORTING, false)
+        set(mainSorting) {
+            pref.edit().putBoolean(KEY_MAIN_SORTING, mainSorting ?: false).apply()
+        }
+
+    var alphabeticalSorting: Boolean?
+        get() = pref.getBoolean(KEY_ALPHABETICAL_SORTING, false)
+        set(alphabeticalSorting) {
+            pref.edit().putBoolean(KEY_ALPHABETICAL_SORTING, alphabeticalSorting ?: false).apply()
+        }
+
+    var viewMode: Boolean?
+        get() = pref.getBoolean(KEY_VIEW_MODE, false)
+        set(viewMode) {
+            pref.edit().putBoolean(KEY_VIEW_MODE, viewMode ?: false).apply()
         }
 }
